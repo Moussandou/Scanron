@@ -22,6 +22,7 @@ import { addFriend } from './friends';
 beforeEach(() => {
   addDoc.mockClear();
   collection.mockClear();
+  serverTimestamp.mockClear();
 });
 
 describe('addFriend', () => {
