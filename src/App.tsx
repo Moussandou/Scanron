@@ -1,9 +1,16 @@
 import './index.css';
+import { Routes, Route } from 'react-router-dom';
+import { AppShell } from './components/layout/AppShell';
+import DashboardPage from './routes/DashboardPage';
+import SettingsPage from './routes/SettingsPage';
 
 export default function App() {
   return (
-    <div className="min-h-dvh bg-bg text-text flex items-center justify-center">
-      <h1 className="text-2xl font-bold tracking-tight text-primary">Scanron</h1>
-    </div>
+    <AppShell>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+      </Routes>
+    </AppShell>
   );
 }

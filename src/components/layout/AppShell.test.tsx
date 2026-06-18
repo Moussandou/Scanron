@@ -2,16 +2,18 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import App from './App';
+import { AppShell } from './AppShell';
 
-describe('App', () => {
-  it('renders the dashboard at the index route', () => {
+describe('AppShell', () => {
+  it('renders the wordmark and child content', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
+      <MemoryRouter>
+        <AppShell>
+          <p>child content</p>
+        </AppShell>
       </MemoryRouter>,
     );
     expect(screen.getByText('Scanron')).toBeDefined();
-    expect(screen.getAllByText('Dashboard').length).toBeGreaterThan(0);
+    expect(screen.getByText('child content')).toBeDefined();
   });
 });
