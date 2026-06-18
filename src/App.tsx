@@ -1,4 +1,3 @@
-import './index.css';
 import { Routes, Route } from 'react-router-dom';
 import { AppShell } from './components/layout/AppShell';
 import DashboardPage from './routes/DashboardPage';
