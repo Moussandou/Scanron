@@ -19,6 +19,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <span className="font-bold tracking-tight">Scanron</span>
           <nav className="ml-auto flex items-center gap-1">
             <NavLink to="/" className={navClass} end>Dashboard</NavLink>
+            <NavLink to="/vault" className={navClass}>Vault</NavLink>
             <NavLink to="/settings" className={navClass}>Settings</NavLink>
           </nav>
         </div>

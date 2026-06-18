@@ -1,7 +1,12 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+
+vi.mock('./lib/auth/useAuth', () => ({
+  useAuth: () => ({ user: { uid: 'u1' }, loading: false }),
+}));
+
 import App from './App';
 
 describe('App', () => {
