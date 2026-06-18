@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.local
 
 # Spec and plan docs: kept local, never committed or pushed
 docs/superpowers/
