@@ -28,21 +28,35 @@ export function QRCard({ name, friendCode, onExpand }: Props) {
 
   return (
     <div
-      className="group relative rounded-2xl border border-border bg-surface/40 backdrop-blur-sm p-5 transition-all duration-300 hover:border-primary/30 hover:-translate-y-1 hover:shadow-[0_8px_25px_-8px_rgba(54,226,123,0.25)] cursor-pointer select-none"
+      className="group relative rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-primary/40 hover:-translate-y-1 hover:shadow-[var(--shadow-pop)] cursor-pointer select-none"
       onClick={onExpand}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onExpand()}
     >
-      <div className="mb-4.5 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <span className="font-bold text-sm text-text group-hover:text-primary transition-colors">{name}</span>
         <span className="font-mono text-[10px] text-muted bg-surface-2/80 px-2 py-0.5 rounded border border-border/60 truncate max-w-[50%]">
           {friendCode}
         </span>
       </div>
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-white flex items-center justify-center border border-border/50 p-2 shadow-inner transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.45)]">
+      <div className="relative aspect-square w-full rounded-xl bg-white flex items-center justify-center border border-border/50 p-3 shadow-inner overflow-hidden">
+        {/* Scanner corner brackets */}
+        <span className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-primary/70 rounded-tl-sm" />
+        <span className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-primary/70 rounded-tr-sm" />
+        <span className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-primary/70 rounded-bl-sm" />
+        <span className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-primary/70 rounded-br-sm" />
+        {/* Live signal */}
+        <span className="absolute top-2.5 right-7 flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full rounded-full bg-signal opacity-75 animate-ping" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+        </span>
         {src ? (
-          <img src={src} alt={`QR for ${name}`} className="w-full h-full object-contain" />
+          <>
+            <img src={src} alt={`QR for ${name}`} className="w-full h-full object-contain" />
+            {/* Scan sweep on hover */}
+            <span className="absolute left-0 w-full h-[2px] bg-accent/60 shadow-[0_0_8px_var(--color-accent)] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2.4s_linear_infinite] pointer-events-none" />
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -50,7 +64,7 @@ export function QRCard({ name, friendCode, onExpand }: Props) {
           </div>
         )}
       </div>
-      <div className="mt-4.5 flex items-center justify-between text-xs text-muted">
+      <div className="mt-4 flex items-center justify-between text-xs text-muted">
         <span className="font-mono text-[10px] bg-surface-2/60 px-2 py-1 rounded truncate max-w-[65%] text-muted/80">{code}</span>
         <div className="flex gap-2.5">
           {src && (

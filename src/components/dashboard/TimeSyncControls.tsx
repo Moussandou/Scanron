@@ -112,7 +112,7 @@ export function TimeSyncControls() {
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-2 text-xs text-primary font-semibold">
+        <div className="flex items-center gap-2 text-xs text-signal font-semibold">
           <CheckCircle2 size={15} />
           {t('timeSync.inSync')}
           {offset !== 0 && (
@@ -138,7 +138,7 @@ export function TimeSyncControls() {
           <p
             className={`text-xs font-semibold px-3 py-2 rounded-lg border ${
               status.ok
-                ? 'bg-primary/10 border-primary/25 text-primary'
+                ? 'bg-signal/10 border-signal/25 text-signal'
                 : 'bg-accent/10 border-accent/25 text-accent'
             }`}
           >

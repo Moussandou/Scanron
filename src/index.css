@@ -9,8 +9,15 @@
   --color-primary-fg: #ffffff;
   --color-accent: #0ea5e9;
   --color-accent-fg: #ffffff;
+  /* Radar green — reserved for live / synced / valid signals only. */
+  --color-signal: #10b981;
+  --color-signal-fg: #ffffff;
   --color-text: #0f172a;
   --color-muted: #64748b;
+
+  /* Elevation scale — soft, cool-tinted shadows for a calm light surface. */
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.10);
+  --shadow-pop: 0 4px 12px rgba(15, 23, 42, 0.06), 0 18px 40px -16px rgba(15, 23, 42, 0.18);
 
   --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Orbitron", sans-serif;
@@ -21,6 +28,21 @@
   color-scheme: light;
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) var(--color-bg);
+}
+
+/* Keyframes referenced across the radar visuals (were missing, so the scan
+   lines and wire flows never actually animated). */
+@keyframes scan {
+  0% { top: -4%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { top: 104%; opacity: 0; }
+}
+@keyframes dash {
+  to { stroke-dashoffset: -16; }
+}
+@keyframes radar-sweep {
+  to { transform: rotate(360deg); }
 }
 
 /* Respect users who prefer reduced motion — this UI leans on pulses, pings,

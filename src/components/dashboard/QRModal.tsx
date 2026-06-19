@@ -68,9 +68,21 @@ export function QRModal({ name, friendCode, onClose }: Props) {
           <span className="font-mono text-[10px] text-primary/85 break-all select-all tracking-wider">{code}</span>
         </div>
 
-        <div className="mx-auto aspect-square max-w-xs overflow-hidden rounded-xl bg-white border border-border/40 p-3.5 shadow-inner">
+        <div className="relative mx-auto aspect-square max-w-xs overflow-hidden rounded-xl bg-white border border-border/40 p-4 shadow-inner">
+          {/* Scanner corner brackets */}
+          <span className="absolute top-2.5 left-2.5 w-5 h-5 border-t-2 border-l-2 border-primary/70 rounded-tl-sm" />
+          <span className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-primary/70 rounded-tr-sm" />
+          <span className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-primary/70 rounded-bl-sm" />
+          <span className="absolute bottom-2.5 right-2.5 w-5 h-5 border-b-2 border-r-2 border-primary/70 rounded-br-sm" />
+          <span className="absolute top-3 right-9 flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-signal opacity-75 animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
+          </span>
           {src ? (
-            <img src={src} alt={`QR for ${name}`} className="w-full h-full object-contain" />
+            <>
+              <img src={src} alt={`QR for ${name}`} className="w-full h-full object-contain" />
+              <span className="absolute left-0 w-full h-[2px] bg-accent/50 shadow-[0_0_8px_var(--color-accent)] animate-[scan_3s_linear_infinite] pointer-events-none" />
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center gap-2 h-full">
               <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />

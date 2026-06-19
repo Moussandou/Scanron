@@ -32,7 +32,7 @@ export function TimeSyncChip() {
           'inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer',
           drifting
             ? 'border-accent/30 bg-accent/10 text-accent'
-            : 'border-border bg-surface/40 text-primary hover:bg-surface-2/40',
+            : 'border-signal/30 bg-signal/5 text-signal hover:bg-signal/10',
         )}
       >
         {drifting ? <AlertTriangle size={14} /> : <Clock size={14} />}

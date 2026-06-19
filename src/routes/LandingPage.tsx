@@ -106,18 +106,18 @@ export default function LandingPage() {
         <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch">
           {steps.map((step, i) => (
             <div key={i} className="contents">
-              <div className="relative rounded-2xl border border-border bg-surface/40 backdrop-blur-sm p-5 flex flex-col gap-3">
-                <span className="absolute top-4 right-4 font-mono text-[11px] font-bold text-border">
-                  0{i + 1}
+              <div className="group relative rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)] p-6 flex flex-col gap-4 transition-all duration-300 hover:border-primary/30 hover:-translate-y-0.5">
+                <span className="absolute top-4 right-5 font-display text-3xl font-black text-primary/15 leading-none select-none">
+                  {i + 1}
                 </span>
-                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[inset_0_0_12px_rgba(255,122,0,0.08)]">
                   {step.icon}
                 </div>
-                <p className="text-xs text-muted leading-relaxed pr-6">{step.text}</p>
+                <p className="text-[13px] text-text/75 leading-relaxed pr-6">{step.text}</p>
               </div>
               {i < steps.length - 1 && (
-                <div className="hidden md:flex items-center justify-center text-border">
-                  <ArrowRight size={18} />
+                <div className="hidden md:flex items-center justify-center text-primary/40">
+                  <ArrowRight size={20} />
                 </div>
               )}
             </div>
