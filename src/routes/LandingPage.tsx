@@ -26,8 +26,8 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-center">
         {/* Left Column: Headline and actions */}
-        <div className="space-y-8 text-left">
-          <div className="space-y-4">
+        <div className="space-y-8 text-center lg:text-left flex flex-col items-center lg:items-start">
+          <div className="space-y-4 flex flex-col items-center lg:items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               <span className="font-mono text-[9px] font-bold text-accent uppercase tracking-widest">
@@ -40,12 +40,12 @@ export default function LandingPage() {
                 Dragon Ball Legends QR Generator
               </span>
             </h1>
-            <p className="text-xs text-muted leading-relaxed max-w-lg">
+            <p className="text-xs text-muted leading-relaxed max-w-lg mx-auto lg:mx-0">
               {t('landing.desc')}
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap justify-center lg:justify-start gap-4 w-full">
             <NavLink to="/dashboard">
               <Button size="lg" className="bg-primary hover:bg-primary/95 text-primary-fg font-display uppercase font-black tracking-wider text-xs px-8 py-6 rounded-xl shadow-[0_0_15px_rgba(255,122,0,0.2)] hover:shadow-[0_0_22px_rgba(255,122,0,0.35)] transition-all duration-300">
                 {t('landing.launch')}
@@ -59,7 +59,7 @@ export default function LandingPage() {
           </div>
 
           {/* Technical Terminal Footer Panel (Dynamic Runtime Specs) */}
-          <div className="p-4 rounded-xl border border-border bg-surface-2/40 max-w-lg flex flex-wrap gap-y-2 items-center justify-between text-[10px] font-mono text-muted uppercase tracking-wider">
+          <div className="p-4 rounded-xl border border-border bg-surface-2/40 w-full max-w-lg flex flex-wrap gap-y-2 items-center justify-center lg:justify-between gap-x-4 sm:gap-x-0 text-[10px] font-mono text-muted uppercase tracking-wider mx-auto lg:mx-0">
             <span>SEED: {activeSeed}</span>
             <span className="w-1.5 h-1.5 rounded-full bg-border/60 hidden sm:inline" />
             <span>Profiles: {profileCount} Active</span>
