@@ -4,6 +4,7 @@ import { getDiscordAuthUrl } from '../lib/auth/discord';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { DragonBallIcon } from '../components/brand/DragonBallIcon';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from '../lib/i18n/I18nContext';
 
@@ -56,7 +57,7 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-surface/90 backdrop-blur-lg p-8 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
         <div className="mb-8 flex items-center gap-4">
           <div className="relative flex items-center justify-center">
-            <img src="/dragon_ball.png" alt="Dragon Ball" className="h-12 w-12 object-contain animate-bounce" style={{ animationDuration: '3s' }} />
+            <DragonBallIcon size={48} className="animate-bounce" style={{ animationDuration: '3s' }} />
           </div>
           <div>
             <h1 className="text-xl font-display font-black tracking-widest text-text uppercase">Scanron</h1>

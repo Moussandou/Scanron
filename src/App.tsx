@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { AppShell } from './components/layout/AppShell';
 import { AuthGate } from './components/auth/AuthGate';
+import LandingPage from './routes/LandingPage';
 import DashboardPage from './routes/DashboardPage';
 import SettingsPage from './routes/SettingsPage';
 import VaultPage from './routes/VaultPage';
@@ -18,7 +19,8 @@ export default function App() {
           <AuthGate>
             <AppShell>
               <Routes>
-                <Route path="/" element={<DashboardPage />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/vault" element={<VaultPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Routes>
