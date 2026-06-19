@@ -54,7 +54,7 @@ export default function DashboardPage() {
             accounts={accounts}
             currentId={currentId}
             onSelect={setSelectedId}
-            onCreated={reloadAccounts}
+            onChanged={reloadAccounts}
           />
         }
       />

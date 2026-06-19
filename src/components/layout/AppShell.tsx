@@ -6,6 +6,7 @@ import { useAuth } from '../../lib/auth/useAuth';
 import { Button } from '../ui/button';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 import { LocalModeBanner } from './LocalModeBanner';
+import { Footer } from './Footer';
 
 function navClass({ isActive }: { isActive: boolean }) {
   return cn(
@@ -25,7 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   };
   
   return (
-    <div className="min-h-dvh bg-bg text-text relative overflow-x-hidden">
+    <div className="min-h-dvh bg-bg text-text relative overflow-x-clip flex flex-col">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[400px] bg-[radial-gradient(circle_at_top,_rgba(255,143,0,0.06)_0%,_transparent_70%)] pointer-events-none z-0" />
       
       <header className="sticky top-0 z-20 border-b border-border bg-surface/90 backdrop-blur-md shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
@@ -58,7 +59,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <LocalModeBanner />
-      <main className="relative z-10 mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main className="relative z-10 mx-auto w-full max-w-5xl px-4 py-8 flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }
