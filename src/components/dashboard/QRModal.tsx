@@ -4,6 +4,7 @@ import { qrDataUrl } from '../../lib/qr/image';
 import { searchCode } from '../../lib/qr/shenron';
 import { subscribeToTimeOffset } from '../../lib/qr/timeSync';
 import { Button } from '../ui/button';
+import { useTranslation } from '../../lib/i18n/I18nContext';
 
 interface Props {
   name: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function QRModal({ name, friendCode, onClose }: Props) {
+  const { t } = useTranslation();
   const [src, setSrc] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   // Bump on offset change so the QR + search code regenerate with the new time.
@@ -62,7 +64,7 @@ export function QRModal({ name, friendCode, onClose }: Props) {
         <h2 className="mb-1 text-lg font-display font-black tracking-wider text-text uppercase">{name}</h2>
         
         <div className="mb-5 flex flex-col gap-1 bg-surface-2/60 p-3 rounded-lg border border-border/50">
-          <span className="text-[9px] uppercase tracking-wider font-display font-bold text-muted">Search Code Payload</span>
+          <span className="text-[9px] uppercase tracking-wider font-display font-bold text-muted">{t('qr.searchCode')}</span>
           <span className="font-mono text-[10px] text-primary/85 break-all select-all tracking-wider">{code}</span>
         </div>
 
@@ -72,7 +74,7 @@ export function QRModal({ name, friendCode, onClose }: Props) {
           ) : (
             <div className="flex flex-col items-center justify-center gap-2 h-full">
               <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-              <span className="text-[9px] uppercase tracking-widest font-display font-bold text-primary">Scanning...</span>
+              <span className="text-[9px] uppercase tracking-widest font-display font-bold text-primary">{t('qr.generating')}</span>
             </div>
           )}
         </div>
@@ -81,24 +83,24 @@ export function QRModal({ name, friendCode, onClose }: Props) {
           {src && (
             <a href={src} download={`${name}-shenron.png`}>
               <Button variant="outline" size="sm" className="gap-1.5 h-9">
-                <Download size={14} /> Download
+                <Download size={14} /> {t('qr.download')}
               </Button>
             </a>
           )}
           <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={copyCode}>
             {copied ? (
               <>
-                <Check className="text-primary animate-bounce" size={14} /> Copied
+                <Check className="text-primary animate-bounce" size={14} /> {t('qr.copied')}
               </>
             ) : (
               <>
-                <Copy size={14} /> Copy code
+                <Copy size={14} /> {t('qr.copy')}
               </>
             )}
           </Button>
           {typeof navigator !== 'undefined' && 'share' in navigator && (
             <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={share}>
-              <Share2 size={14} /> Share
+              <Share2 size={14} /> {t('qr.share')}
             </Button>
           )}
         </div>

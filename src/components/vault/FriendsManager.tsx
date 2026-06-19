@@ -69,7 +69,7 @@ export function FriendsManager({ uid, accountId, friends, onChanged }: Props) {
               <button
                 onClick={() => remove(f.id)}
                 className="text-muted hover:text-accent hover:scale-110 active:scale-95 transition-all duration-200 p-1 cursor-pointer"
-                aria-label={`Remove ${f.name}`}
+                aria-label={`${t('friends.remove')} — ${f.name}`}
               >
                 <Trash2 size={16} />
               </button>

@@ -3,6 +3,7 @@ import { Download, Maximize2 } from 'lucide-react';
 import { qrDataUrl } from '../../lib/qr/image';
 import { searchCode } from '../../lib/qr/shenron';
 import { subscribeToTimeOffset } from '../../lib/qr/timeSync';
+import { useTranslation } from '../../lib/i18n/I18nContext';
 
 interface Props {
   name: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function QRCard({ name, friendCode, onExpand }: Props) {
+  const { t } = useTranslation();
   const [src, setSrc] = useState<string | null>(null);
   // Bump on offset change so the QR + search code regenerate with the new time.
   const [offsetVersion, setOffsetVersion] = useState(0);
@@ -44,7 +46,7 @@ export function QRCard({ name, friendCode, onExpand }: Props) {
         ) : (
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-            <span className="text-[9px] uppercase tracking-widest font-display font-bold text-primary">Scanning...</span>
+            <span className="text-[9px] uppercase tracking-widest font-display font-bold text-primary">{t('qr.generating')}</span>
           </div>
         )}
       </div>
@@ -57,7 +59,7 @@ export function QRCard({ name, friendCode, onExpand }: Props) {
               download={`${name}-shenron.png`}
               onClick={(e) => e.stopPropagation()}
               className="text-muted hover:text-primary hover:scale-110 active:scale-95 transition-all duration-200 p-1"
-              aria-label={`Download ${name} QR`}
+              aria-label={`${t('qr.download')} — ${name}`}
             >
               <Download size={15} />
             </a>

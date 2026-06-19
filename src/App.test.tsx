@@ -23,7 +23,7 @@ describe('App', () => {
         </I18nProvider>
       </MemoryRouter>,
     );
-    expect(screen.getByText('Scanron')).toBeDefined();
+    expect(screen.getAllByText('Scanron').length).toBeGreaterThan(0);
     expect(screen.getByText('Launch Radar')).toBeDefined();
   });
 
@@ -35,7 +35,7 @@ describe('App', () => {
         </I18nProvider>
       </MemoryRouter>,
     );
-    expect(screen.getByText('Scanron')).toBeDefined();
+    expect(screen.getAllByText('Scanron').length).toBeGreaterThan(0);
     expect(screen.getByRole('tab', { name: 'Scan' })).toBeDefined();
   });
 

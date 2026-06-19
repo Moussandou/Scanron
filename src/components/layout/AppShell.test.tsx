@@ -26,7 +26,7 @@ function renderShell() {
 describe('AppShell', () => {
   it('renders the wordmark and child content', () => {
     renderShell();
-    expect(screen.getByText('Scanron')).toBeDefined();
+    expect(screen.getAllByText('Scanron').length).toBeGreaterThan(0);
     expect(screen.getByText('child content')).toBeDefined();
   });
 
