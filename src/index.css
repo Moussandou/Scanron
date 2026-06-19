@@ -32,33 +32,15 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   background-image: 
-    radial-gradient(circle at 50% 20%, rgba(255, 122, 0, 0.06) 0%, rgba(14, 165, 233, 0.02) 45%, transparent 75%),
-    radial-gradient(circle at 50% 20%, transparent 199px, rgba(255, 122, 0, 0.04) 200px, rgba(255, 122, 0, 0.04) 201px, transparent 202px),
-    radial-gradient(circle at 50% 20%, transparent 399px, rgba(255, 122, 0, 0.03) 400px, rgba(255, 122, 0, 0.03) 401px, transparent 402px),
-    linear-gradient(rgba(255, 122, 0, 0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 122, 0, 0.012) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+    radial-gradient(circle at 50% 20%, rgba(255, 122, 0, 0.05) 0%, rgba(14, 165, 233, 0.02) 50%, transparent 80%),
+    radial-gradient(circle at 50% 20%, transparent 249px, rgba(255, 122, 0, 0.02) 250px, rgba(255, 122, 0, 0.02) 251px, transparent 252px),
+    radial-gradient(circle at 50% 20%, transparent 499px, rgba(255, 122, 0, 0.015) 500px, rgba(255, 122, 0, 0.015) 501px, transparent 502px),
+    linear-gradient(rgba(14, 165, 233, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 165, 233, 0.01) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
   background-position: center, center, center, center, center;
   background-attachment: fixed;
   position: relative;
-}
-
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 122, 0, 0.12), transparent);
-  animation: scanline 8s linear infinite;
-  pointer-events: none;
-  z-index: 50;
 }
 
 /* Card hover panel border glows */

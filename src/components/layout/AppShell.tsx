@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import { RadarMark } from '../brand/RadarMark';
 import { CapsuleCorpLogo } from '../brand/CapsuleCorpLogo';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../lib/auth/useAuth';
@@ -28,16 +27,15 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh bg-bg text-text relative overflow-x-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[400px] bg-[radial-gradient(circle_at_top,_rgba(255,143,0,0.06)_0%,_transparent_70%)] pointer-events-none z-0" />
       
-      <header className="sticky top-0 z-20 border-b border-border bg-surface/80 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+      <header className="sticky top-0 z-20 border-b border-border bg-surface/90 backdrop-blur-md shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4">
-          <NavLink to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-            <CapsuleCorpLogo size={26} />
-            <RadarMark size={22} />
-            <span className="font-display font-black text-lg tracking-widest text-text uppercase">
+          <NavLink to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <CapsuleCorpLogo size={24} />
+            <span className="font-display font-black text-base sm:text-lg tracking-widest text-text uppercase">
               Scanron
             </span>
           </NavLink>
-          <nav className="ml-auto flex items-center gap-1.5">
+          <nav className="ml-auto flex items-center gap-1 sm:gap-1.5">
             <NavLink to="/dashboard" className={navClass} end>{t('shell.dashboard')}</NavLink>
             <NavLink to="/vault" className={navClass}>{t('shell.vault')}</NavLink>
             <NavLink to="/settings" className={navClass}>{t('shell.settings')}</NavLink>

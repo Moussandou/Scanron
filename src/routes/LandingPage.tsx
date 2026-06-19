@@ -2,29 +2,42 @@ import { NavLink } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { useTranslation } from '../lib/i18n/I18nContext';
 import { RadarConsole } from '../components/dashboard/RadarConsole';
-import { SystemModules } from '../components/dashboard/SystemModules';
-import { Shield, Sparkles, Cpu, Radio } from 'lucide-react';
+import { useAuth } from '../lib/auth/useAuth';
+import { useAccounts } from '../lib/db/hooks';
+import { 
+  SeedDecodingVisual, 
+  ZeroCredentialsVisual, 
+  MultiAccountVisual, 
+  DiscordWebhookVisual 
+} from '../components/dashboard/FeatureVisuals';
 
 export default function LandingPage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { accounts } = useAccounts(user?.uid ?? null);
+  
+  // Real project stats
+  const activeSeed = new Date().toISOString().split('T')[0];
+  const storageMode = user ? 'Firebase Cloud Sync' : 'Browser Local Storage';
+  const profileCount = accounts.length;
 
   return (
-    <div className="space-y-16 animate-in fade-in duration-300">
+    <div className="space-y-16 py-4 animate-in fade-in duration-300">
       {/* Hero Section */}
       <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-center">
         {/* Left Column: Headline and actions */}
-        <div className="space-y-8">
+        <div className="space-y-8 text-left">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               <span className="font-mono text-[9px] font-bold text-accent uppercase tracking-widest">
-                System Active // Scanron_v4.2
+                Storage: {storageMode}
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl font-display font-black tracking-tight text-text leading-tight uppercase">
-              {t('landing.title')}
-              <span className="block text-primary text-2xl sm:text-3xl mt-2 tracking-wide font-bold">
-                {t('landing.tagline')}
+              Scanron DBL Radar
+              <span className="block text-primary text-xl sm:text-2xl mt-2 tracking-wide font-bold">
+                Dragon Ball Legends QR Generator
               </span>
             </h1>
             <p className="text-xs text-muted leading-relaxed max-w-lg">
@@ -34,7 +47,7 @@ export default function LandingPage() {
 
           <div className="flex flex-wrap gap-4">
             <NavLink to="/dashboard">
-              <Button size="lg" className="bg-primary hover:bg-primary/95 text-primary-fg font-display uppercase font-black tracking-wider text-xs px-8 py-6 rounded-xl shadow-[0_0_15px_rgba(255,122,0,0.25)] hover:shadow-[0_0_22px_rgba(255,122,0,0.4)] transition-all duration-300">
+              <Button size="lg" className="bg-primary hover:bg-primary/95 text-primary-fg font-display uppercase font-black tracking-wider text-xs px-8 py-6 rounded-xl shadow-[0_0_15px_rgba(255,122,0,0.2)] hover:shadow-[0_0_22px_rgba(255,122,0,0.35)] transition-all duration-300">
                 {t('landing.launch')}
               </Button>
             </NavLink>
@@ -45,18 +58,18 @@ export default function LandingPage() {
             </NavLink>
           </div>
 
-          {/* Technical Terminal Footer Panel */}
-          <div className="p-4 rounded-xl border border-border bg-surface-2/40 max-w-lg flex items-center justify-between text-[10px] font-mono text-muted uppercase tracking-wider">
-            <span>Server: local_node</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-border" />
-            <span>Encryption: AES_256</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-border" />
-            <span>Latency: 14ms</span>
+          {/* Technical Terminal Footer Panel (Dynamic Runtime Specs) */}
+          <div className="p-4 rounded-xl border border-border bg-surface-2/40 max-w-lg flex flex-wrap gap-y-2 items-center justify-between text-[10px] font-mono text-muted uppercase tracking-wider">
+            <span>SEED: {activeSeed}</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-border/60 hidden sm:inline" />
+            <span>Profiles: {profileCount} Active</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-border/60 hidden sm:inline" />
+            <span>Calculations: Local JS</span>
           </div>
         </div>
 
         {/* Right Column: Interactive CSS Radar Console */}
-        <div className="relative">
+        <div className="relative w-full max-w-[420px] mx-auto lg:max-w-none">
           <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-accent/20 to-primary/20 opacity-30 blur-xl animate-pulse" />
           <RadarConsole />
         </div>
@@ -71,60 +84,59 @@ export default function LandingPage() {
           <div className="w-12 h-1 bg-primary mx-auto mt-2 rounded" />
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm glow-card border border-border space-y-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-              <Cpu size={18} />
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto">
+          {/* Card 1: Direct Seed Decoding */}
+          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm border border-border space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="space-y-2">
+              <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
+                {t('landing.feat1.title')}
+              </h3>
+              <p className="text-[11px] text-muted leading-relaxed">
+                {t('landing.feat1.desc')}
+              </p>
             </div>
-            <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
-              {t('landing.feat1.title')}
-            </h3>
-            <p className="text-[11px] text-muted leading-relaxed">
-              {t('landing.feat1.desc')}
-            </p>
+            <SeedDecodingVisual />
           </div>
 
-          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm glow-card-accent border border-border space-y-3">
-            <div className="w-9 h-9 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
-              <Shield size={18} />
+          {/* Card 2: Zero Credentials */}
+          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm border border-border space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="space-y-2">
+              <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
+                {t('landing.feat2.title')}
+              </h3>
+              <p className="text-[11px] text-muted leading-relaxed">
+                {t('landing.feat2.desc')}
+              </p>
             </div>
-            <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
-              {t('landing.feat2.title')}
-            </h3>
-            <p className="text-[11px] text-muted leading-relaxed">
-              {t('landing.feat2.desc')}
-            </p>
+            <ZeroCredentialsVisual />
           </div>
 
-          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm glow-card border border-border space-y-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-              <Sparkles size={18} />
+          {/* Card 3: Multi-Account Vault */}
+          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm border border-border space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="space-y-2">
+              <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
+                {t('landing.feat3.title')}
+              </h3>
+              <p className="text-[11px] text-muted leading-relaxed">
+                {t('landing.feat3.desc')}
+              </p>
             </div>
-            <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
-              {t('landing.feat3.title')}
-            </h3>
-            <p className="text-[11px] text-muted leading-relaxed">
-              {t('landing.feat3.desc')}
-            </p>
+            <MultiAccountVisual />
           </div>
 
-          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm glow-card-accent border border-border space-y-3">
-            <div className="w-9 h-9 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
-              <Radio size={18} />
+          {/* Card 4: Discord Webhooks */}
+          <div className="p-5 rounded-2xl bg-surface/60 backdrop-blur-sm border border-border space-y-4 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="space-y-2">
+              <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
+                {t('landing.feat4.title')}
+              </h3>
+              <p className="text-[11px] text-muted leading-relaxed">
+                {t('landing.feat4.desc')}
+              </p>
             </div>
-            <h3 className="text-xs font-display font-bold uppercase tracking-wider text-text">
-              {t('landing.feat4.title')}
-            </h3>
-            <p className="text-[11px] text-muted leading-relaxed">
-              {t('landing.feat4.desc')}
-            </p>
+            <DiscordWebhookVisual />
           </div>
         </div>
-      </div>
-
-      {/* Modules Status List */}
-      <div className="max-w-xl mx-auto">
-        <SystemModules />
       </div>
     </div>
   );
