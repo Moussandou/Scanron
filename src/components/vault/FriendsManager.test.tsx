@@ -4,6 +4,7 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
 vi.mock('../../lib/db/friends');
 
+import { I18nProvider } from '../../lib/i18n/I18nContext';
 import { FriendsManager } from './FriendsManager';
 import { addFriend, removeFriend } from '../../lib/db/friends';
 
@@ -20,7 +21,11 @@ afterEach(() => { cleanup(); });
 
 describe('FriendsManager', () => {
   it('blocks an invalid friend code', () => {
-    render(<FriendsManager uid="u1" accountId="a1" friends={friends} onChanged={vi.fn()} />);
+    render(
+      <I18nProvider>
+        <FriendsManager uid="u1" accountId="a1" friends={friends} onChanged={vi.fn()} />
+      </I18nProvider>
+    );
     fireEvent.change(screen.getByLabelText('Friend name'), { target: { value: 'Vegeta' } });
     fireEvent.change(screen.getByLabelText('Friend code'), { target: { value: 'bad' } });
     fireEvent.click(screen.getByRole('button', { name: /add friend/i }));
@@ -29,7 +34,11 @@ describe('FriendsManager', () => {
   });
 
   it('adds a valid friend', () => {
-    render(<FriendsManager uid="u1" accountId="a1" friends={friends} onChanged={vi.fn()} />);
+    render(
+      <I18nProvider>
+        <FriendsManager uid="u1" accountId="a1" friends={friends} onChanged={vi.fn()} />
+      </I18nProvider>
+    );
     fireEvent.change(screen.getByLabelText('Friend name'), { target: { value: 'Vegeta' } });
     fireEvent.change(screen.getByLabelText('Friend code'), { target: { value: 'abc123' } });
     fireEvent.click(screen.getByRole('button', { name: /add friend/i }));

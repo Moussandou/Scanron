@@ -1,20 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a0e0c;
-  --color-surface: #121815;
-  --color-surface-2: #18211c;
-  --color-border: #24332b;
-  --color-primary: #36e27b;
-  --color-primary-fg: #06120b;
-  --color-accent: #f5a623;
-  --color-text: #e7efe9;
-  --color-muted: #8aa090;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef2f6;
+  --color-border: #cbd5e1;
+  --color-primary: #ff7a00;
+  --color-primary-fg: #ffffff;
+  --color-accent: #0ea5e9;
+  --color-accent-fg: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+
+  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Orbitron", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg);
 }
 
 html, body, #root {
@@ -25,4 +31,40 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(255, 122, 0, 0.05) 0%, rgba(14, 165, 233, 0.02) 50%, transparent 80%),
+    radial-gradient(circle at 50% 20%, transparent 249px, rgba(255, 122, 0, 0.02) 250px, rgba(255, 122, 0, 0.02) 251px, transparent 252px),
+    radial-gradient(circle at 50% 20%, transparent 499px, rgba(255, 122, 0, 0.015) 500px, rgba(255, 122, 0, 0.015) 501px, transparent 502px),
+    linear-gradient(rgba(14, 165, 233, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 165, 233, 0.01) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  background-position: center, center, center, center, center;
+  background-attachment: fixed;
+  position: relative;
 }
+
+/* Card hover panel border glows */
+.glow-card {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  border-left: 3px solid var(--color-border);
+}
+.glow-card:hover {
+  box-shadow: 0 0 15px rgba(255, 122, 0, 0.08);
+  border-color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.glow-card-accent {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  border-left: 3px solid var(--color-border);
+}
+.glow-card-accent:hover {
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.08);
+  border-color: var(--color-accent);
+  border-left-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+
+

@@ -1,19 +1,45 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { AppShell } from './AppShell';
+import { I18nProvider } from '../../lib/i18n/I18nContext';
 
-describe('AppShell', () => {
-  it('renders the wordmark and child content', () => {
-    render(
-      <MemoryRouter>
+vi.mock('../../lib/auth/useAuth', () => ({
+  useAuth: () => ({ user: null, loading: false }),
+}));
+
+afterEach(cleanup);
+
+function renderShell() {
+  return render(
+    <MemoryRouter>
+      <I18nProvider>
         <AppShell>
           <p>child content</p>
         </AppShell>
-      </MemoryRouter>,
-    );
+      </I18nProvider>
+    </MemoryRouter>,
+  );
+}
+
+describe('AppShell', () => {
+  it('renders the wordmark and child content', () => {
+    renderShell();
     expect(screen.getByText('Scanron')).toBeDefined();
     expect(screen.getByText('child content')).toBeDefined();
+  });
+
+  it('shows Codes and Settings nav, but not Vault', () => {
+    renderShell();
+    expect(screen.getByRole('link', { name: 'Codes' })).toBeDefined();
+    expect(screen.getByRole('link', { name: 'Settings' })).toBeDefined();
+    expect(screen.queryByRole('link', { name: 'Vault' })).toBeNull();
+  });
+
+  it('shows the local-mode banner when signed out', () => {
+    renderShell();
+    // useAuth is mocked to return user: null
+    expect(screen.getByText('Local Mode Active')).toBeDefined();
   });
 });
