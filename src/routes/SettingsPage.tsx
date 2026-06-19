@@ -9,6 +9,7 @@ import { exportConfig, importConfig } from '../lib/db/importExport';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
+import { TimeSyncControls } from '../components/dashboard/TimeSyncControls';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from '../lib/i18n/I18nContext';
 import type { FamilyDoc } from '../lib/db/types';
@@ -333,6 +334,9 @@ export default function SettingsPage() {
           </NavLink>
         </div>
       )}
+
+      {/* Clock Sync — available to everyone, fixes expired QR codes */}
+      <TimeSyncControls />
 
       {/* Main Settings Form */}
       <div className={user ? '' : 'relative group opacity-45 pointer-events-none select-none'}>

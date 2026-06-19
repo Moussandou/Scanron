@@ -1,5 +1,6 @@
 import JSZip from 'jszip';
 import { qrDataUrl } from './image';
+import { getEffectiveTime } from './timeSync';
 
 function dataUrlToUint8(dataUrl: string): Uint8Array {
   const base64 = dataUrl.split(',')[1];
@@ -13,7 +14,7 @@ export async function buildFriendsZipBlob(
   friends: { name: string; friendCode: string }[],
 ): Promise<Blob> {
   const zip = new JSZip();
-  const now = Date.now();
+  const now = getEffectiveTime();
   await Promise.all(
     friends.map(async (f, i) => {
       const url = await qrDataUrl(f.friendCode, now);

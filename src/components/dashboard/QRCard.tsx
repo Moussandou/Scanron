@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Download, Maximize2 } from 'lucide-react';
 import { qrDataUrl } from '../../lib/qr/image';
 import { searchCode } from '../../lib/qr/shenron';
+import { subscribeToTimeOffset } from '../../lib/qr/timeSync';
 
 interface Props {
   name: string;
@@ -11,13 +12,17 @@ interface Props {
 
 export function QRCard({ name, friendCode, onExpand }: Props) {
   const [src, setSrc] = useState<string | null>(null);
+  // Bump on offset change so the QR + search code regenerate with the new time.
+  const [offsetVersion, setOffsetVersion] = useState(0);
   const code = searchCode(friendCode);
+
+  useEffect(() => subscribeToTimeOffset(() => setOffsetVersion((v) => v + 1)), []);
 
   useEffect(() => {
     let stale = false;
     qrDataUrl(friendCode).then((url) => { if (!stale) setSrc(url); });
     return () => { stale = true; };
-  }, [friendCode]);
+  }, [friendCode, offsetVersion]);
 
   return (
     <div

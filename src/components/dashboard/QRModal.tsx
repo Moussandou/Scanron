@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { X, Download, Copy, Share2, Check } from 'lucide-react';
 import { qrDataUrl } from '../../lib/qr/image';
 import { searchCode } from '../../lib/qr/shenron';
+import { subscribeToTimeOffset } from '../../lib/qr/timeSync';
 import { Button } from '../ui/button';
 
 interface Props {
@@ -13,13 +14,17 @@ interface Props {
 export function QRModal({ name, friendCode, onClose }: Props) {
   const [src, setSrc] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  // Bump on offset change so the QR + search code regenerate with the new time.
+  const [offsetVersion, setOffsetVersion] = useState(0);
   const code = searchCode(friendCode);
+
+  useEffect(() => subscribeToTimeOffset(() => setOffsetVersion((v) => v + 1)), []);
 
   useEffect(() => {
     let stale = false;
     qrDataUrl(friendCode).then((url) => { if (!stale) setSrc(url); });
     return () => { stale = true; };
-  }, [friendCode]);
+  }, [friendCode, offsetVersion]);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {

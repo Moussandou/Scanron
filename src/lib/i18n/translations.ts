@@ -40,6 +40,10 @@ export const translations = {
     'timeSync.chipDrift': 'Clock drift',
     'timeSync.chipAdjust': 'Adjust',
 
+    'codes.tabScan': 'Scan',
+    'codes.tabManage': 'Manage',
+    'codes.helpScanTitle': 'How to scan & how it works',
+
     'vault.title': 'Vault',
     'vault.subtitle': 'Manage DBL accounts and sync friend code listings.',
     'vault.noAccount': 'No Active DBL Account',
@@ -169,6 +173,10 @@ export const translations = {
     'timeSync.chipOk': 'Horloge synchro',
     'timeSync.chipDrift': "Dérive d'horloge",
     'timeSync.chipAdjust': 'Ajuster',
+
+    'codes.tabScan': 'Scanner',
+    'codes.tabManage': 'Gérer',
+    'codes.helpScanTitle': 'Comment scanner & fonctionnement',
 
     'vault.title': 'Coffre-fort',
     'vault.subtitle': 'Gérez les comptes DBL et synchronisez les codes d\'amis.',

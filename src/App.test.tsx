@@ -27,7 +27,7 @@ describe('App', () => {
     expect(screen.getByText('Launch Radar')).toBeDefined();
   });
 
-  it('renders the dashboard at the /dashboard route', () => {
+  it('renders the Codes page at the /dashboard route', () => {
     render(
       <MemoryRouter initialEntries={['/dashboard']}>
         <I18nProvider>
@@ -36,6 +36,17 @@ describe('App', () => {
       </MemoryRouter>,
     );
     expect(screen.getByText('Scanron')).toBeDefined();
-    expect(screen.getByText('Active Stream Account')).toBeDefined();
+    expect(screen.getByRole('tab', { name: 'Scan' })).toBeDefined();
+  });
+
+  it('redirects /vault to the Manage tab of the Codes page', () => {
+    render(
+      <MemoryRouter initialEntries={['/vault']}>
+        <I18nProvider>
+          <App />
+        </I18nProvider>
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole('tab', { name: 'Manage' }).getAttribute('aria-selected')).toBe('true');
   });
 });
