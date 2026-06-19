@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { signInWithEmail, signInWithGoogle, registerWithEmail } from '../lib/auth/methods';
+import { getDiscordAuthUrl } from '../lib/auth/discord';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -36,6 +37,16 @@ export default function LoginPage() {
     }
   }
 
+  function discord() {
+    setError(null);
+    try {
+      const redirectUri = window.location.origin + '/auth/discord/callback';
+      window.location.href = getDiscordAuthUrl(redirectUri);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Discord initialization failed');
+    }
+  }
+
   return (
     <div className="min-h-dvh bg-bg text-text flex items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-6">
@@ -66,7 +77,10 @@ export default function LoginPage() {
             {mode === 'register' ? 'Create account' : 'Sign in'}
           </Button>
         </form>
-        <Button variant="outline" className="mt-3 w-full" onClick={google}>Continue with Google</Button>
+        <div className="flex flex-col gap-2 mt-3">
+          <Button variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
+          <Button variant="outline" className="w-full" onClick={discord}>Continue with Discord</Button>
+        </div>
         <button
           type="button"
           className="mt-4 w-full text-center text-xs text-muted hover:text-text"
