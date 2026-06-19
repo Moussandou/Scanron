@@ -10,8 +10,16 @@ export interface UserDoc {
   displayName: string;
   discordId?: string;
   discordWebhook?: string;
+  familyId?: string;
   fcmTokens: string[];
   notificationSettings: NotificationSettings;
+  createdAt: number;
+}
+
+export interface FamilyDoc {
+  name: string;
+  ownerUid: string;
+  memberUids: string[];
   createdAt: number;
 }
 

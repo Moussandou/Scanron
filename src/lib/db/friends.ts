@@ -4,12 +4,17 @@ import {
 import { getDb } from '../firebase/app';
 import { friendsPath, friendPath } from './paths';
 import { assertValidFriendCode } from './validation';
+import { addFamilyFriend, removeFamilyFriend } from './families';
 import type { FriendDoc } from './types';
 
 export async function addFriend(
   uid: string, accountId: string, name: string, friendCode: string,
 ): Promise<string> {
   assertValidFriendCode(friendCode);
+  if (accountId.startsWith('family:')) {
+    const familyId = accountId.split(':')[1];
+    return addFamilyFriend(familyId, name, friendCode);
+  }
   const ref = await addDoc(collection(getDb(), friendsPath(uid, accountId)), {
     name, friendCode, createdAt: serverTimestamp(),
   });
@@ -27,11 +32,16 @@ export async function updateFriend(
   uid: string, accountId: string, friendId: string, patch: Partial<Pick<FriendDoc, 'name' | 'friendCode'>>,
 ): Promise<void> {
   if (patch.friendCode !== undefined) assertValidFriendCode(patch.friendCode);
+  // Note: updateFriend is not currently used for family friends, but could be routed similarly if needed.
   await updateDoc(doc(getDb(), friendPath(uid, accountId, friendId)), patch);
 }
 
 export async function removeFriend(
   uid: string, accountId: string, friendId: string,
 ): Promise<void> {
+  if (accountId.startsWith('family:')) {
+    const familyId = accountId.split(':')[1];
+    return removeFamilyFriend(familyId, friendId);
+  }
   await deleteDoc(doc(getDb(), friendPath(uid, accountId, friendId)));
 }

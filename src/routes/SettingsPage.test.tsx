@@ -29,6 +29,26 @@ vi.mock('../lib/auth/push', () => ({
   disablePushNotifications: () => mockDisablePushNotifications(),
 }));
 
+const mockCreateFamily = vi.fn().mockResolvedValue('fam123');
+const mockJoinFamily = vi.fn().mockResolvedValue(undefined);
+const mockLeaveFamily = vi.fn().mockResolvedValue(undefined);
+const mockGetFamily = vi.fn().mockResolvedValue(null);
+
+vi.mock('../lib/db/families', () => ({
+  createFamily: (...args: any[]) => mockCreateFamily(...args),
+  joinFamily: (...args: any[]) => mockJoinFamily(...args),
+  leaveFamily: (...args: any[]) => mockLeaveFamily(...args),
+  getFamily: (...args: any[]) => mockGetFamily(...args),
+}));
+
+const mockExportConfig = vi.fn().mockResolvedValue('{"accounts":[]}');
+const mockImportConfig = vi.fn().mockResolvedValue(undefined);
+
+vi.mock('../lib/db/importExport', () => ({
+  exportConfig: (...args: any[]) => mockExportConfig(...args),
+  importConfig: (...args: any[]) => mockImportConfig(...args),
+}));
+
 import SettingsPage from './SettingsPage';
 
 beforeEach(() => {
@@ -37,6 +57,12 @@ beforeEach(() => {
   mockUpdateDoc.mockClear();
   mockRequestPushPermission.mockReset();
   mockDisablePushNotifications.mockClear();
+  mockCreateFamily.mockClear();
+  mockJoinFamily.mockClear();
+  mockLeaveFamily.mockClear();
+  mockGetFamily.mockReset().mockResolvedValue(null);
+  mockExportConfig.mockClear();
+  mockImportConfig.mockClear();
 });
 
 afterEach(() => {
@@ -89,5 +115,51 @@ describe('SettingsPage', () => {
     const updatedData = mockUpdateDoc.mock.calls[0][1];
     expect(updatedData.discordWebhook).toBe('https://discord.com/webhook/new');
     expect(updatedData.notificationSettings.sendAtHour).toBe(14);
+  });
+
+  it('allows user to create a family', async () => {
+    mockGetDoc.mockResolvedValueOnce({
+      exists: () => true,
+      data: () => ({ displayName: 'Goku' }),
+    });
+
+    render(<SettingsPage />);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/family name/i)).toBeDefined();
+    });
+
+    const nameInput = screen.getByLabelText(/family name/i) as HTMLInputElement;
+    fireEvent.change(nameInput, { target: { value: 'Z Fighters' } });
+
+    const createBtn = screen.getByRole('button', { name: /create family/i });
+    fireEvent.click(createBtn);
+
+    await waitFor(() => {
+      expect(mockCreateFamily).toHaveBeenCalledWith('Z Fighters', 'u1');
+    });
+  });
+
+  it('allows user to join a family', async () => {
+    mockGetDoc.mockResolvedValueOnce({
+      exists: () => true,
+      data: () => ({ displayName: 'Goku' }),
+    });
+
+    render(<SettingsPage />);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/family id to join/i)).toBeDefined();
+    });
+
+    const idInput = screen.getByLabelText(/family id to join/i) as HTMLInputElement;
+    fireEvent.change(idInput, { target: { value: 'fam999' } });
+
+    const joinBtn = screen.getByRole('button', { name: /join family/i });
+    fireEvent.click(joinBtn);
+
+    await waitFor(() => {
+      expect(mockJoinFamily).toHaveBeenCalledWith('fam999', 'u1');
+    });
   });
 });
