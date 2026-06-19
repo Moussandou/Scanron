@@ -36,6 +36,9 @@ export const translations = {
     'timeSync.reset': 'Reset',
     'timeSync.ahead': 'ahead',
     'timeSync.behind': 'behind',
+    'timeSync.chipOk': 'Clock synced',
+    'timeSync.chipDrift': 'Clock drift',
+    'timeSync.chipAdjust': 'Adjust',
 
     'vault.title': 'Vault',
     'vault.subtitle': 'Manage DBL accounts and sync friend code listings.',
@@ -163,6 +166,9 @@ export const translations = {
     'timeSync.reset': 'Réinitialiser',
     'timeSync.ahead': "en avance",
     'timeSync.behind': "en retard",
+    'timeSync.chipOk': 'Horloge synchro',
+    'timeSync.chipDrift': "Dérive d'horloge",
+    'timeSync.chipAdjust': 'Ajuster',
 
     'vault.title': 'Coffre-fort',
     'vault.subtitle': 'Gérez les comptes DBL et synchronisez les codes d\'amis.',
