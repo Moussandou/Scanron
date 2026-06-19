@@ -68,16 +68,16 @@ export default function LoginPage() {
         <form onSubmit={submit} className="space-y-4">
           {mode === 'register' && (
             <div className="space-y-1.5">
-              <Label htmlFor="displayName" className="text-xs uppercase tracking-wider font-display font-semibold">Display name</Label>
+              <Label htmlFor="displayName" className="text-xs uppercase tracking-wider font-display font-semibold">{t('login.displayName')}</Label>
               <Input id="displayName" placeholder="Goku" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
             </div>
           )}
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-xs uppercase tracking-wider font-display font-semibold">Email</Label>
+            <Label htmlFor="email" className="text-xs uppercase tracking-wider font-display font-semibold">{t('login.email')}</Label>
             <Input id="email" type="email" placeholder="goku@dbz.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-xs uppercase tracking-wider font-display font-semibold">Password</Label>
+            <Label htmlFor="password" className="text-xs uppercase tracking-wider font-display font-semibold">{t('login.password')}</Label>
             <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           {error && (
@@ -86,13 +86,13 @@ export default function LoginPage() {
             </p>
           )}
           <Button type="submit" className="w-full mt-2" disabled={busy}>
-            {mode === 'register' ? 'Create account' : 'Sign in'}
+            {mode === 'register' ? t('login.createAccount') : t('login.signIn')}
           </Button>
         </form>
         
         <div className="relative flex py-4 items-center">
           <div className="flex-grow border-t border-border"></div>
-          <span className="flex-shrink mx-4 text-[10px] text-muted font-display uppercase tracking-widest font-semibold">or</span>
+          <span className="flex-shrink mx-4 text-[10px] text-muted font-display uppercase tracking-widest font-semibold">{t('login.or')}</span>
           <div className="flex-grow border-t border-border"></div>
         </div>
 
@@ -110,7 +110,7 @@ export default function LoginPage() {
           className="mt-6 w-full text-center text-xs text-muted hover:text-primary transition-colors font-display font-bold uppercase tracking-wider cursor-pointer"
           onClick={() => setMode(mode === 'signin' ? 'register' : 'signin')}
         >
-          {mode === 'signin' ? 'Need an account? Register' : 'Have an account? Sign in'}
+          {mode === 'signin' ? t('login.needAccount') : t('login.haveAccount')}
         </button>
 
         <div className="mt-5 border-t border-border/40 pt-4 text-center">
