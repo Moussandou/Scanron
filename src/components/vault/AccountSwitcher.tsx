@@ -5,7 +5,7 @@ import { cn } from '../../lib/utils';
 import type { AccountDoc } from '../../lib/db/types';
 
 interface Props {
-  uid: string;
+  uid: string | null;
   accounts: (AccountDoc & { id: string })[];
   currentId: string | null;
   onSelect: (id: string) => void;
@@ -40,7 +40,10 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onCreated 
             )}
           >
             {isActive && (
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse mr-2 shadow-[0_0_6px_var(--color-primary)]" />
+              <span className="relative flex h-1.5 w-1.5 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary shadow-[0_0_6px_var(--color-primary)]" />
+              </span>
             )}
             {a.name}
           </button>

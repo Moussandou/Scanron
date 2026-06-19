@@ -2,6 +2,8 @@ import { type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { RadarMark } from '../brand/RadarMark';
 import { cn } from '../../lib/utils';
+import { useAuth } from '../../lib/auth/useAuth';
+import { Button } from '../ui/button';
 
 function navClass({ isActive }: { isActive: boolean }) {
   return cn(
@@ -13,6 +15,8 @@ function navClass({ isActive }: { isActive: boolean }) {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  
   return (
     <div className="min-h-dvh bg-bg text-text relative overflow-x-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[400px] bg-[radial-gradient(circle_at_top,_rgba(54,226,123,0.06)_0%,_transparent_70%)] pointer-events-none z-0" />
@@ -29,6 +33,14 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavLink to="/" className={navClass} end>Dashboard</NavLink>
             <NavLink to="/vault" className={navClass}>Vault</NavLink>
             <NavLink to="/settings" className={navClass}>Settings</NavLink>
+            {!user && (
+              <NavLink to="/login" className="ml-1">
+                <Button size="sm" variant="outline" className="border-accent/25 text-accent hover:border-accent/40 hover:bg-accent/10 hover:shadow-[0_0_10px_rgba(245,166,37,0.15)] flex items-center gap-1 h-8 px-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  Cloud Sync
+                </Button>
+              </NavLink>
+            )}
           </nav>
         </div>
       </header>

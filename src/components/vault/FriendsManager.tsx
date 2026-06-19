@@ -8,7 +8,7 @@ import { Label } from '../ui/label';
 import type { FriendDoc } from '../../lib/db/types';
 
 interface Props {
-  uid: string;
+  uid: string | null;
   accountId: string;
   friends: (FriendDoc & { id: string })[];
   onChanged: () => void;

@@ -44,11 +44,12 @@ describe('useAccounts', () => {
     expect(listAccounts).toHaveBeenCalledWith('u1');
   });
 
-  it('stays empty when uid is null', async () => {
+  it('loads local accounts when uid is null', async () => {
+    listAccounts.mockResolvedValue([{ id: 'local_default', name: 'Default Account', order: 0, createdAt: 0 }]);
     const { result } = renderHook(() => useAccounts(null));
-    expect(result.current.accounts).toEqual([]);
-    expect(result.current.loading).toBe(false);
-    expect(listAccounts).not.toHaveBeenCalled();
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.accounts).toHaveLength(1);
+    expect(listAccounts).toHaveBeenCalledWith(null);
   });
 
   it('appends family pseudo-account if user has a familyId', async () => {

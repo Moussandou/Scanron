@@ -38,5 +38,34 @@ body {
   background-size: 100% 100%, 20px 20px, 20px 20px;
   background-position: center, -0.5px -0.5px, -0.5px -0.5px;
   background-attachment: fixed;
+  position: relative;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to bottom, transparent, rgba(54, 226, 123, 0.06), transparent);
+  animation: scanline 10s linear infinite;
+  pointer-events: none;
+  z-index: 50;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%);
+  background-size: 100% 4px;
+  z-index: 49;
+  pointer-events: none;
 }
 

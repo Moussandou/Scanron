@@ -15,30 +15,28 @@ export function useAccounts(uid: string | null) {
   const [error, setError] = useState<Error | null>(null);
 
   const reload = useCallback(async () => {
-    if (!uid) {
-      setAccounts([]);
-      return;
-    }
     setLoading(true);
     setError(null);
     try {
       const personalAccounts = await listAccounts(uid);
 
-      const db = getDb();
-      const userRef = doc(db, userPath(uid));
-      const userSnap = await getDoc(userRef);
+      if (uid) {
+        const db = getDb();
+        const userRef = doc(db, userPath(uid));
+        const userSnap = await getDoc(userRef);
 
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        if (userData.familyId) {
-          const family = await getFamily(userData.familyId);
-          if (family) {
-            personalAccounts.push({
-              id: `family:${userData.familyId}`,
-              name: `👪 Family: ${family.name}`,
-              order: -1,
-              createdAt: family.createdAt || Date.now(),
-            });
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          if (userData.familyId) {
+            const family = await getFamily(userData.familyId);
+            if (family) {
+              personalAccounts.push({
+                id: `family:${userData.familyId}`,
+                name: `👪 Family: ${family.name}`,
+                order: -1,
+                createdAt: family.createdAt || Date.now(),
+              });
+            }
           }
         }
       }
@@ -64,7 +62,7 @@ export function useFriends(uid: string | null, accountId: string | null) {
   const [error, setError] = useState<Error | null>(null);
 
   const reload = useCallback(async () => {
-    if (!uid || !accountId) {
+    if (!accountId) {
       setFriends([]);
       return;
     }

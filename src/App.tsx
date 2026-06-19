@@ -5,11 +5,13 @@ import DashboardPage from './routes/DashboardPage';
 import SettingsPage from './routes/SettingsPage';
 import VaultPage from './routes/VaultPage';
 import DiscordCallback from './routes/DiscordCallback';
+import LoginPage from './routes/LoginPage';
 
 export default function App() {
   return (
     <Routes>
       <Route path="/auth/discord/callback" element={<DiscordCallback />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route
         path="*"
         element={

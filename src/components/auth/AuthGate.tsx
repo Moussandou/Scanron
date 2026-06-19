@@ -1,10 +1,9 @@
 import { type ReactNode } from 'react';
 import { useAuth } from '../../lib/auth/useAuth';
-import LoginPage from '../../routes/LoginPage';
 import { RadarMark } from '../brand/RadarMark';
 
 export function AuthGate({ children }: { children: ReactNode }) {
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
   if (loading) {
     return (
       <div className="min-h-dvh bg-bg text-text flex flex-col items-center justify-center gap-4">
@@ -18,6 +17,5 @@ export function AuthGate({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (!user) return <LoginPage />;
   return <>{children}</>;
 }
