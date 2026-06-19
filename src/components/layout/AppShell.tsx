@@ -5,6 +5,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../lib/auth/useAuth';
 import { Button } from '../ui/button';
 import { useTranslation } from '../../lib/i18n/I18nContext';
+import { LocalModeBanner } from './LocalModeBanner';
 
 function navClass({ isActive }: { isActive: boolean }) {
   return cn(
@@ -36,8 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </NavLink>
           <nav className="ml-auto flex items-center gap-1 sm:gap-1.5">
-            <NavLink to="/dashboard" className={navClass} end>{t('shell.dashboard')}</NavLink>
-            <NavLink to="/vault" className={navClass}>{t('shell.vault')}</NavLink>
+            <NavLink to="/dashboard" className={navClass} end>{t('shell.codes')}</NavLink>
             <NavLink to="/settings" className={navClass}>{t('shell.settings')}</NavLink>
             <button
               onClick={toggleLanguage}
@@ -57,6 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </header>
+      <LocalModeBanner />
       <main className="relative z-10 mx-auto max-w-5xl px-4 py-8">{children}</main>
     </div>
   );
