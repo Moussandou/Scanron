@@ -1,0 +1,16 @@
+{
+  "short_name": "Scanron",
+  "name": "Scanron Daily Dragon Radar",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0a0e0c",
+  "theme_color": "#36e27b",
+  "display": "standalone",
+  "orientation": "portrait"
+}
