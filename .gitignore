@@ -27,3 +27,6 @@ docs/superpowers/
 *.njsproj
 *.sln
 *.sw?
+
+# Local design working artifacts (screenshots, capture scripts)
+.design/
