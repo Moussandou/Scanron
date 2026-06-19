@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, Download, Copy, Share2 } from 'lucide-react';
+import { X, Download, Copy, Share2, Check } from 'lucide-react';
 import { qrDataUrl } from '../../lib/qr/image';
 import { searchCode } from '../../lib/qr/shenron';
 import { Button } from '../ui/button';
@@ -41,43 +41,58 @@ export function QRModal({ name, friendCode, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/85 backdrop-blur-md p-4 animate-in fade-in duration-300" onClick={onClose}>
       <div
-        className="relative w-full max-w-md rounded-2xl border border-border bg-surface p-6"
+        className="relative w-full max-w-md rounded-2xl border border-primary/10 bg-surface/90 backdrop-blur-lg p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-muted hover:text-text"
+          className="absolute right-4.5 top-4.5 text-muted hover:text-primary hover:rotate-90 transition-all duration-300 p-1 cursor-pointer"
           aria-label="Close"
         >
           <X size={20} />
         </button>
 
-        <h2 className="mb-4 text-lg font-semibold">{name}</h2>
-        <p className="mb-4 font-mono text-xs text-muted break-all">{code}</p>
+        <h2 className="mb-1 text-lg font-display font-black tracking-wider text-text uppercase">{name}</h2>
+        
+        <div className="mb-5 flex flex-col gap-1 bg-surface-2/60 p-3 rounded-lg border border-border/50">
+          <span className="text-[9px] uppercase tracking-wider font-display font-bold text-muted">Search Code Payload</span>
+          <span className="font-mono text-[10px] text-primary/85 break-all select-all tracking-wider">{code}</span>
+        </div>
 
-        <div className="mx-auto aspect-square max-w-xs overflow-hidden rounded-lg bg-white flex items-center justify-center">
+        <div className="mx-auto aspect-square max-w-xs overflow-hidden rounded-xl bg-white border border-border/40 p-3.5 shadow-inner">
           {src ? (
             <img src={src} alt={`QR for ${name}`} className="w-full h-full object-contain" />
           ) : (
-            <span className="text-xs text-muted">Generating...</span>
+            <div className="flex flex-col items-center justify-center gap-2 h-full">
+              <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+              <span className="text-[9px] uppercase tracking-widest font-display font-bold text-primary">Scanning...</span>
+            </div>
           )}
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
           {src && (
             <a href={src} download={`${name}-shenron.png`}>
-              <Button variant="outline" className="gap-1.5">
+              <Button variant="outline" size="sm" className="gap-1.5 h-9">
                 <Download size={14} /> Download
               </Button>
             </a>
           )}
-          <Button variant="outline" className="gap-1.5" onClick={copyCode}>
-            <Copy size={14} /> {copied ? 'Copied' : 'Copy code'}
+          <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={copyCode}>
+            {copied ? (
+              <>
+                <Check className="text-primary animate-bounce" size={14} /> Copied
+              </>
+            ) : (
+              <>
+                <Copy size={14} /> Copy code
+              </>
+            )}
           </Button>
           {typeof navigator !== 'undefined' && 'share' in navigator && (
-            <Button variant="outline" className="gap-1.5" onClick={share}>
+            <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={share}>
               <Share2 size={14} /> Share
             </Button>
           )}

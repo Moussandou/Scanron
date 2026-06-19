@@ -262,10 +262,10 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-2xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-300">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-text">Radar Settings</h1>
-        <p className="text-sm text-muted">Configure scan schedules, shared family codes, and data backups.</p>
+        <h1 className="text-2xl font-display font-black tracking-widest text-text uppercase">Radar Settings</h1>
+        <p className="text-xs text-muted mt-1">Configure scan schedules, shared family codes, and data backups.</p>
       </div>
 
       {error && (
@@ -276,8 +276,8 @@ export default function SettingsPage() {
 
       {/* Main Settings Form */}
       <form onSubmit={save} className="space-y-6">
-        <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
-          <h2 className="text-base font-semibold text-text flex items-center gap-2">
+        <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
+          <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
             <Bell size={18} className="text-primary" />
             Notification Channels
           </h2>
@@ -296,13 +296,13 @@ export default function SettingsPage() {
                   onChange={(e) => setDiscordEnabled(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-surface-2 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-text after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                <div className="w-11 h-6 bg-surface-2 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-text after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary border border-border/85 peer-checked:border-primary/50 shadow-inner"></div>
               </label>
             </div>
 
             {discordEnabled && (
-              <div className="space-y-1 pl-4 border-l-2 border-primary/20 animate-in fade-in slide-in-from-left-4 duration-200">
-                <Label htmlFor="discordWebhook">Discord Webhook URL</Label>
+              <div className="space-y-1.5 pl-4 border-l-2 border-primary/20 animate-in fade-in slide-in-from-left-4 duration-200">
+                <Label htmlFor="discordWebhook" className="text-xs uppercase tracking-wider font-display font-semibold">Discord Webhook URL</Label>
                 <Input
                   id="discordWebhook"
                   type="url"
@@ -314,7 +314,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            <hr className="border-border" />
+            <hr className="border-border/50" />
 
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
@@ -329,26 +329,26 @@ export default function SettingsPage() {
                   onChange={(e) => handlePushToggle(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-surface-2 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-text after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                <div className="w-11 h-6 bg-surface-2 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-text after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary border border-border/85 peer-checked:border-primary/50 shadow-inner"></div>
               </label>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
-          <h2 className="text-base font-semibold text-text flex items-center gap-2">
+        <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
+          <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
             <Clock size={18} className="text-primary" />
             Scan Schedule
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <Label htmlFor="sendAtHour">Reminder Hour</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="sendAtHour" className="text-xs uppercase tracking-wider font-display font-semibold">Reminder Hour</Label>
               <select
                 id="sendAtHour"
                 value={sendAtHour}
                 onChange={(e) => setSendAtHour(parseInt(e.target.value, 10))}
-                className="h-10 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 animate-none"
+                className="h-10 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-text transition-all duration-200 focus-visible:outline-none focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
               >
                 {Array.from({ length: 24 }).map((_, h) => (
                   <option key={h} value={h}>
@@ -358,13 +358,13 @@ export default function SettingsPage() {
               </select>
             </div>
 
-            <div className="space-y-1">
-              <Label htmlFor="timezone">Timezone</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="timezone" className="text-xs uppercase tracking-wider font-display font-semibold">Timezone</Label>
               <select
                 id="timezone"
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="h-10 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                className="h-10 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm text-text transition-all duration-200 focus-visible:outline-none focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
               >
                 {timezones.map((tz) => (
                   <option key={tz} value={tz}>
@@ -376,20 +376,20 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 border-b border-border pb-6">
+        <div className="flex items-center justify-between gap-4 border-b border-border/20 pb-6">
           <div className="flex items-center gap-2">
             {success && (
-              <span className="flex items-center gap-1.5 text-sm text-primary animate-in fade-in zoom-in-95 duration-200">
-                <CheckCircle size={16} />
+              <span className="flex items-center gap-1.5 text-xs text-primary animate-in fade-in zoom-in-95 duration-200 font-semibold">
+                <CheckCircle size={15} />
                 Settings saved successfully!
               </span>
             )}
           </div>
-          <Button type="submit" disabled={saving} className="min-w-32">
+          <Button type="submit" disabled={saving} className="min-w-36">
             {saving ? (
-              <Loader2 className="w-4 h-4 animate-spin mr-1" />
+              <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
             ) : (
-              <Save className="w-4 h-4 mr-1" />
+              <Save className="w-4 h-4 mr-1.5" />
             )}
             Save Settings
           </Button>
@@ -397,23 +397,23 @@ export default function SettingsPage() {
       </form>
 
       {/* Family Mode Panel */}
-      <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
-        <h2 className="text-base font-semibold text-text flex items-center gap-2">
+      <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
+        <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
           <Users size={18} className="text-primary" />
           Family Mode (Shared Friends)
         </h2>
 
         {familyId && family ? (
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-xl border border-border bg-surface-2">
-              <div className="space-y-1">
-                <span className="text-xs text-muted block uppercase tracking-wider font-semibold">Active Family</span>
-                <span className="text-sm font-semibold text-text">{family.name}</span>
-                <span className="text-xs text-muted block font-mono mt-1">ID: {familyId}</span>
+          <div className="space-y-5 animate-in fade-in duration-200">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-primary/10 bg-primary/5">
+              <div className="space-y-1.5">
+                <span className="text-[10px] text-primary/80 block uppercase tracking-wider font-display font-bold">Active Family</span>
+                <span className="text-base font-bold text-text">{family.name}</span>
+                <span className="text-[10px] text-muted block font-mono mt-1 select-all bg-surface px-2 py-0.5 rounded border border-border/80 w-fit">ID: {familyId}</span>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={copyFamilyId} className="h-8">
-                  <Copy size={14} className="mr-1" />
+                <Button variant="outline" size="sm" onClick={copyFamilyId} className="h-8.5">
+                  <Copy size={13} className="mr-1.5" />
                   Copy ID
                 </Button>
                 <Button
@@ -421,16 +421,16 @@ export default function SettingsPage() {
                   size="sm"
                   onClick={handleLeaveFamily}
                   disabled={familyBusy}
-                  className="h-8 border-accent/20 text-accent hover:bg-accent/10"
+                  className="h-8.5 border-accent/20 text-accent hover:bg-accent/10"
                 >
                   {family?.ownerUid === user?.uid ? (
                     <>
-                      <Trash2 size={14} className="mr-1" />
+                      <Trash2 size={13} className="mr-1.5" />
                       Disband
                     </>
                   ) : (
                     <>
-                      <LogOut size={14} className="mr-1" />
+                      <LogOut size={13} className="mr-1.5" />
                       Leave
                     </>
                   )}
@@ -439,24 +439,24 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs text-muted block uppercase tracking-wider font-semibold">Members</span>
-              <div className="space-y-1 max-h-32 overflow-y-auto">
+              <span className="text-[10px] text-muted block uppercase tracking-wider font-display font-bold">Members</span>
+              <div className="divide-y divide-border/30 max-h-36 overflow-y-auto rounded-lg border border-border/40 bg-surface/20">
                 {family.memberUids.map((uid) => (
-                  <div key={uid} className="text-xs text-text flex items-center gap-1.5 py-1">
+                  <div key={uid} className="text-xs text-text flex items-center gap-2 px-3 py-2 hover:bg-surface-2/20 transition-colors">
                     <Shield size={12} className={uid === family.ownerUid ? 'text-accent' : 'text-muted'} />
-                    <span className="font-mono">{uid}</span>
-                    {uid === family.ownerUid && <span className="text-[10px] text-accent-fg bg-accent/20 px-1 rounded">Owner</span>}
-                    {uid === user?.uid && <span className="text-[10px] text-primary bg-primary/15 px-1 rounded">You</span>}
+                    <span className="font-mono tracking-wide">{uid}</span>
+                    {uid === family.ownerUid && <span className="text-[9px] font-display font-bold uppercase text-accent bg-accent/15 px-1.5 py-0.5 rounded border border-accent/10">Owner</span>}
+                    {uid === user?.uid && <span className="text-[9px] font-display font-bold uppercase text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/10">You</span>}
                   </div>
                 ))}
               </div>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <form onSubmit={handleCreateFamily} className="space-y-3">
-              <div className="space-y-1">
-                <Label htmlFor="familyName">Family Name</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in duration-200">
+            <form onSubmit={handleCreateFamily} className="space-y-3.5">
+              <div className="space-y-1.5">
+                <Label htmlFor="familyName" className="text-xs uppercase tracking-wider font-display font-semibold">Family Name</Label>
                 <Input
                   id="familyName"
                   placeholder="e.g. Z Fighters"
@@ -466,14 +466,14 @@ export default function SettingsPage() {
                 />
               </div>
               <Button type="submit" disabled={familyBusy} className="w-full">
-                {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
+                {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : <Plus className="w-4 h-4 mr-1.5" />}
                 Create Family
               </Button>
             </form>
 
-            <form onSubmit={handleJoinFamily} className="space-y-3">
-              <div className="space-y-1">
-                <Label htmlFor="familyIdToJoin">Family ID to Join</Label>
+            <form onSubmit={handleJoinFamily} className="space-y-3.5">
+              <div className="space-y-1.5">
+                <Label htmlFor="familyIdToJoin" className="text-xs uppercase tracking-wider font-display font-semibold">Family ID to Join</Label>
                 <Input
                   id="familyIdToJoin"
                   placeholder="Enter family invite ID..."
@@ -483,7 +483,7 @@ export default function SettingsPage() {
                 />
               </div>
               <Button type="submit" disabled={familyBusy} variant="outline" className="w-full">
-                {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Users className="w-4 h-4 mr-1" />}
+                {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : <Users className="w-4 h-4 mr-1.5" />}
                 Join Family
               </Button>
             </form>
@@ -492,26 +492,26 @@ export default function SettingsPage() {
       </div>
 
       {/* Backup and Restore Panel */}
-      <div className="rounded-2xl border border-border bg-surface p-6 space-y-6">
-        <h2 className="text-base font-semibold text-text flex items-center gap-2">
+      <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
+        <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
           <Upload size={18} className="text-primary" />
           Backup & Restore
         </h2>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div className="space-y-1">
-            <span className="text-sm font-medium text-text block">Local Config Backup</span>
+            <span className="text-sm font-semibold text-text block">Local Config Backup</span>
             <span className="text-xs text-muted block">Export all your account swap listings and friends, or restore them.</span>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2.5">
             <Button variant="outline" onClick={handleExport} className="h-10">
-              <Download size={16} className="mr-1.5" />
+              <Download size={15} className="mr-1.5" />
               Export
             </Button>
 
-            <label className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 border border-border bg-transparent text-text hover:bg-surface-2 h-10 px-4 text-sm cursor-pointer">
-              <Upload size={16} className="mr-1.5" />
+            <label className="inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wider font-display uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 border border-border bg-transparent text-text hover:border-primary/45 hover:bg-surface-2/40 h-10 px-4.5 text-xs cursor-pointer active:scale-[0.98]">
+              <Upload size={15} className="mr-1.5" />
               Import
               <input
                 type="file"

@@ -18,9 +18,12 @@ export default function VaultPage() {
   if (!uid) return null;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="mb-3 text-xl font-semibold tracking-tight">Vault</h1>
+    <div className="space-y-8 animate-in fade-in duration-300">
+      <div className="space-y-3">
+        <div>
+          <h1 className="text-2xl font-display font-black tracking-widest text-text uppercase">Vault</h1>
+          <p className="text-xs text-muted mt-1">Manage DBL accounts and sync friend code listings.</p>
+        </div>
         <AccountSwitcher
           uid={uid}
           accounts={accounts}
@@ -32,7 +35,9 @@ export default function VaultPage() {
       {currentId ? (
         <FriendsManager uid={uid} accountId={currentId} friends={friends} onChanged={reloadFriends} />
       ) : (
-        <p className="text-sm text-muted">Create an account to start adding friend codes.</p>
+        <div className="rounded-2xl border border-border bg-surface/30 p-8 text-center">
+          <p className="text-sm text-muted">Create an account above to start registering friend codes.</p>
+        </div>
       )}
     </div>
   );

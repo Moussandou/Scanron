@@ -37,30 +37,38 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
+    <div className="space-y-8 animate-in fade-in duration-300">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/10 pb-4">
+        <div>
+          <h1 className="text-2xl font-display font-black tracking-widest text-text uppercase">Dashboard</h1>
+          <p className="text-xs text-muted mt-1">Real-time DBL Shenron code active sweep panel.</p>
+        </div>
         {friends.length > 0 && (
-          <Button variant="outline" className="gap-1.5" onClick={handleDownloadAll} disabled={zipping}>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={handleDownloadAll} disabled={zipping}>
             <Download size={14} /> {zipping ? 'Zipping...' : 'Download All'}
           </Button>
         )}
       </div>
 
-      <AccountSwitcher
-        uid={uid}
-        accounts={accounts}
-        currentId={currentId}
-        onSelect={setCurrentId}
-        onCreated={reloadAccounts}
-      />
+      <div className="space-y-2">
+        <span className="text-[10px] uppercase tracking-wider font-display font-bold text-muted/80 block">Active Stream Account</span>
+        <AccountSwitcher
+          uid={uid}
+          accounts={accounts}
+          currentId={currentId}
+          onSelect={setCurrentId}
+          onCreated={reloadAccounts}
+        />
+      </div>
 
       {friends.length === 0 ? (
-        <p className="py-12 text-center text-sm text-muted">
-          No friends in this account. Add friend codes in the Vault to generate QR codes.
-        </p>
+        <div className="rounded-2xl border border-border bg-surface/30 p-12 text-center">
+          <p className="text-sm text-muted">
+            No friends linked to this channel. Register DBL friend codes in the Vault to generate scanner codes.
+          </p>
+        </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {friends.map((f) => (
             <QRCard
               key={f.id}
