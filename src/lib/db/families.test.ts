@@ -28,7 +28,7 @@ vi.mock('../firebase/app', () => ({
   getDb: () => ({ __type: 'db' }),
 }));
 
-import { createFamily, joinFamily, leaveFamily, addFamilyFriend, removeFamilyFriend } from './families';
+import { createFamily, joinFamily, leaveFamily } from './families';
 
 beforeEach(() => {
   mockDoc.mockClear();
