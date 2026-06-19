@@ -7,13 +7,16 @@ vi.mock('./lib/auth/useAuth', () => ({
   useAuth: () => ({ user: { uid: 'u1' }, loading: false }),
 }));
 
+import { I18nProvider } from './lib/i18n/I18nContext';
 import App from './App';
 
 describe('App', () => {
   it('renders the dashboard at the index route', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <App />
+        <I18nProvider>
+          <App />
+        </I18nProvider>
       </MemoryRouter>,
     );
     expect(screen.getByText('Scanron')).toBeDefined();

@@ -10,6 +10,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from '../lib/i18n/I18nContext';
 import type { FamilyDoc } from '../lib/db/types';
 import {
   Bell,
@@ -30,6 +31,7 @@ import {
 
 export default function SettingsPage() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -51,6 +53,10 @@ export default function SettingsPage() {
   const [familyNameInput, setFamilyNameInput] = useState('');
   const [familyIdInput, setFamilyIdInput] = useState('');
   const [familyBusy, setFamilyBusy] = useState(false);
+
+  // Webhook testing states
+  const [testingWebhook, setTestingWebhook] = useState(false);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
   useEffect(() => {
     try {
@@ -161,6 +167,36 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleTestWebhook() {
+    if (!discordWebhook) return;
+    setTestingWebhook(true);
+    setTestResult(null);
+    try {
+      const response = await fetch(discordWebhook, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: 'Scanron Radar',
+          avatar_url: 'https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=128&h=128&fit=crop',
+          content: '☄️ **Scanron Radar Connection Test** ☄️\nYour Discord Webhook notification is configured correctly! Time to summon Shenron! 🐉'
+        }),
+      });
+
+      if (response.ok) {
+        setTestResult({ success: true, message: 'Test notification sent successfully!' });
+      } else {
+        const text = await response.text();
+        setTestResult({ success: false, message: `Failed: ${response.status} ${response.statusText}. ${text}` });
+      }
+    } catch (err) {
+      setTestResult({ success: false, message: err instanceof Error ? err.message : 'Network error' });
+    } finally {
+      setTestingWebhook(false);
+    }
+  }
+
   // Backup & Restore
   async function handleExport() {
     if (!user) return;
@@ -261,7 +297,7 @@ export default function SettingsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-muted space-y-3">
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm">Loading radar settings...</p>
+        <p className="text-sm">Loading...</p>
       </div>
     );
   }
@@ -269,8 +305,8 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-300">
       <div>
-        <h1 className="text-2xl font-display font-black tracking-widest text-text uppercase">Radar Settings</h1>
-        <p className="text-xs text-muted mt-1">Configure scan schedules, shared family codes, and data backups.</p>
+        <h1 className="text-2xl font-display font-black tracking-widest text-text uppercase">{t('settings.title')}</h1>
+        <p className="text-xs text-muted mt-1">{t('settings.subtitle')}</p>
       </div>
 
       {error && (
@@ -280,19 +316,19 @@ export default function SettingsPage() {
       )}
 
       {!user && (
-        <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-300 shadow-[0_4px_20px_rgba(245,166,35,0.04)]">
+        <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-300 shadow-[0_4px_20px_rgba(255,143,0,0.04)]">
           <div className="space-y-1">
             <h3 className="text-xs font-display font-black tracking-wider text-accent uppercase flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_6px_var(--color-accent)]" />
-              Local Mode Active
+              {t('settings.localActive')}
             </h3>
             <p className="text-xs text-muted leading-relaxed">
-              Your codes are stored safely in local storage. Connect to cloud to back up, share codes with your family, and schedule automated reminders!
+              {t('settings.localActiveDesc')}
             </p>
           </div>
           <NavLink to="/login" className="shrink-0">
             <Button variant="outline" size="sm" className="border-accent/25 text-accent hover:bg-accent/10 whitespace-nowrap">
-              Cloud Sync
+              {t('settings.cloudSync')}
             </Button>
           </NavLink>
         </div>
@@ -303,7 +339,7 @@ export default function SettingsPage() {
         {!user && (
           <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-auto">
             <div className="bg-surface border border-border px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
-              <Lock size={13} /> Sign in to configure reminders
+              <Lock size={13} /> {t('settings.lockReminders')}
             </div>
           </div>
         )}
@@ -311,14 +347,14 @@ export default function SettingsPage() {
           <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
           <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
             <Bell size={18} className="text-primary" />
-            Notification Channels
+            {t('settings.notifications')}
           </h2>
 
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <Label htmlFor="discordToggle" className="text-text font-medium block">Discord Notifications</Label>
-                <span className="text-xs text-muted block">Post QR codes and search codes to your Discord webhook daily.</span>
+                <Label htmlFor="discordToggle" className="text-text font-medium block">{t('settings.discord')}</Label>
+                <span className="text-xs text-muted block">{t('settings.discordDesc')}</span>
               </div>
               <label className="relative inline-flex items-center cursor-pointer mt-1">
                 <input
@@ -333,16 +369,46 @@ export default function SettingsPage() {
             </div>
 
             {discordEnabled && (
-              <div className="space-y-1.5 pl-4 border-l-2 border-primary/20 animate-in fade-in slide-in-from-left-4 duration-200">
-                <Label htmlFor="discordWebhook" className="text-xs uppercase tracking-wider font-display font-semibold">Discord Webhook URL</Label>
-                <Input
-                  id="discordWebhook"
-                  type="url"
-                  placeholder="https://discord.com/api/webhooks/..."
-                  value={discordWebhook}
-                  onChange={(e) => setDiscordWebhook(e.target.value)}
-                  required={discordEnabled}
-                />
+              <div className="space-y-3.5 pl-4 border-l-2 border-primary/20 animate-in fade-in slide-in-from-left-4 duration-200">
+                <div className="space-y-1.5">
+                  <Label htmlFor="discordWebhook" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.discordWebhook')}</Label>
+                  <Input
+                    id="discordWebhook"
+                    type="url"
+                    placeholder="https://discord.com/api/webhooks/..."
+                    value={discordWebhook}
+                    onChange={(e) => setDiscordWebhook(e.target.value)}
+                    required={discordEnabled}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full sm:w-fit border-primary/20 text-primary hover:bg-primary/5 h-8.5"
+                    disabled={testingWebhook || !discordWebhook.startsWith('http')}
+                    onClick={handleTestWebhook}
+                  >
+                    {testingWebhook ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
+                        {t('settings.testing')}
+                      </>
+                    ) : (
+                      t('settings.testWebhook')
+                    )}
+                  </Button>
+                  {testResult && (
+                    <p className={`text-xs font-semibold px-3 py-2 rounded-lg border ${
+                      testResult.success 
+                        ? 'bg-primary/10 border-primary/25 text-primary' 
+                        : 'bg-accent/10 border-accent/25 text-accent'
+                    }`}>
+                      {testResult.message}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
 
@@ -350,8 +416,8 @@ export default function SettingsPage() {
 
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <Label htmlFor="pushToggle" className="text-text font-medium block">Web Push Notifications</Label>
-                <span className="text-xs text-muted block">Receive browser notifications when the daily radar scan completes.</span>
+                <Label htmlFor="pushToggle" className="text-text font-medium block">{t('settings.webpush')}</Label>
+                <span className="text-xs text-muted block">{t('settings.webpushDesc')}</span>
               </div>
               <label className="relative inline-flex items-center cursor-pointer mt-1">
                 <input
@@ -370,12 +436,12 @@ export default function SettingsPage() {
         <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
           <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
             <Clock size={18} className="text-primary" />
-            Scan Schedule
+            {t('settings.schedule')}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="sendAtHour" className="text-xs uppercase tracking-wider font-display font-semibold">Reminder Hour</Label>
+              <Label htmlFor="sendAtHour" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.hour')}</Label>
               <select
                 id="sendAtHour"
                 value={sendAtHour}
@@ -391,7 +457,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="timezone" className="text-xs uppercase tracking-wider font-display font-semibold">Timezone</Label>
+              <Label htmlFor="timezone" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.timezone')}</Label>
               <select
                 id="timezone"
                 value={timezone}
@@ -413,7 +479,7 @@ export default function SettingsPage() {
             {success && (
               <span className="flex items-center gap-1.5 text-xs text-primary animate-in fade-in zoom-in-95 duration-200 font-semibold">
                 <CheckCircle size={15} />
-                Settings saved successfully!
+                {t('settings.saved')}
               </span>
             )}
           </div>
@@ -423,7 +489,7 @@ export default function SettingsPage() {
             ) : (
               <Save className="w-4 h-4 mr-1.5" />
             )}
-            Save Settings
+            {saving ? t('settings.saving') : t('settings.save')}
           </Button>
         </div>
         </form>
@@ -434,21 +500,21 @@ export default function SettingsPage() {
         {!user && (
           <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-auto">
             <div className="bg-surface border border-border px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
-              <Lock size={13} /> Sign in to join family mode
+              <Lock size={13} /> {t('settings.lockFamily')}
             </div>
           </div>
         )}
         <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
           <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
           <Users size={18} className="text-primary" />
-          Family Mode (Shared Friends)
+          {t('settings.familyTitle')}
         </h2>
 
         {familyId && family ? (
           <div className="space-y-5 animate-in fade-in duration-200">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-primary/10 bg-primary/5">
               <div className="space-y-1.5">
-                <span className="text-[10px] text-primary/80 block uppercase tracking-wider font-display font-bold">Active Family</span>
+                <span className="text-[10px] text-primary/80 block uppercase tracking-wider font-display font-bold">{t('settings.familyActive')}</span>
                 <span className="text-base font-bold text-text">{family.name}</span>
                 <span className="text-[10px] text-muted block font-mono mt-1 select-all bg-surface px-2 py-0.5 rounded border border-border/80 w-fit">ID: {familyId}</span>
               </div>
@@ -467,12 +533,12 @@ export default function SettingsPage() {
                   {family?.ownerUid === user?.uid ? (
                     <>
                       <Trash2 size={13} className="mr-1.5" />
-                      Disband
+                      {t('settings.familyDisband')}
                     </>
                   ) : (
                     <>
                       <LogOut size={13} className="mr-1.5" />
-                      Leave
+                      {t('settings.familyLeave')}
                     </>
                   )}
                 </Button>
@@ -480,13 +546,13 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-2">
-              <span className="text-[10px] text-muted block uppercase tracking-wider font-display font-bold">Members</span>
+              <span className="text-[10px] text-muted block uppercase tracking-wider font-display font-bold">{t('settings.familyMembers')}</span>
               <div className="divide-y divide-border/30 max-h-36 overflow-y-auto rounded-lg border border-border/40 bg-surface/20">
                 {family.memberUids.map((uid) => (
                   <div key={uid} className="text-xs text-text flex items-center gap-2 px-3 py-2 hover:bg-surface-2/20 transition-colors">
                     <Shield size={12} className={uid === family.ownerUid ? 'text-accent' : 'text-muted'} />
                     <span className="font-mono tracking-wide">{uid}</span>
-                    {uid === family.ownerUid && <span className="text-[9px] font-display font-bold uppercase text-accent bg-accent/15 px-1.5 py-0.5 rounded border border-accent/10">Owner</span>}
+                    {uid === family.ownerUid && <span className="text-[9px] font-display font-bold uppercase text-accent bg-accent/15 px-1.5 py-0.5 rounded border border-accent/10">{t('settings.familyOwner')}</span>}
                     {uid === user?.uid && <span className="text-[9px] font-display font-bold uppercase text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/10">You</span>}
                   </div>
                 ))}
@@ -497,7 +563,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in duration-200">
             <form onSubmit={handleCreateFamily} className="space-y-3.5">
               <div className="space-y-1.5">
-                <Label htmlFor="familyName" className="text-xs uppercase tracking-wider font-display font-semibold">Family Name</Label>
+                <Label htmlFor="familyName" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.familyName')}</Label>
                 <Input
                   id="familyName"
                   placeholder="e.g. Z Fighters"
@@ -508,13 +574,13 @@ export default function SettingsPage() {
               </div>
               <Button type="submit" disabled={familyBusy} className="w-full">
                 {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : <Plus className="w-4 h-4 mr-1.5" />}
-                Create Family
+                {t('settings.familyCreate')}
               </Button>
             </form>
 
             <form onSubmit={handleJoinFamily} className="space-y-3.5">
               <div className="space-y-1.5">
-                <Label htmlFor="familyIdToJoin" className="text-xs uppercase tracking-wider font-display font-semibold">Family ID to Join</Label>
+                <Label htmlFor="familyIdToJoin" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.familyIdToJoin')}</Label>
                 <Input
                   id="familyIdToJoin"
                   placeholder="Enter family invite ID..."
@@ -525,7 +591,7 @@ export default function SettingsPage() {
               </div>
               <Button type="submit" disabled={familyBusy} variant="outline" className="w-full">
                 {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : <Users className="w-4 h-4 mr-1.5" />}
-                Join Family
+                {t('settings.familyJoin')}
               </Button>
             </form>
           </div>
@@ -537,24 +603,24 @@ export default function SettingsPage() {
       <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
         <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
           <Upload size={18} className="text-primary" />
-          Backup & Restore
+          {t('settings.backupTitle')}
         </h2>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div className="space-y-1">
-            <span className="text-sm font-semibold text-text block">Local Config Backup</span>
-            <span className="text-xs text-muted block">Export all your account swap listings and friends, or restore them.</span>
+            <span className="text-sm font-semibold text-text block">{t('settings.backupTitle')}</span>
+            <span className="text-xs text-muted block">{t('settings.backupDesc')}</span>
           </div>
 
           <div className="flex gap-2.5">
             <Button variant="outline" onClick={handleExport} className="h-10">
               <Download size={15} className="mr-1.5" />
-              Export
+              {t('settings.export')}
             </Button>
 
             <label className="inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wider font-display uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 border border-border bg-transparent text-text hover:border-primary/45 hover:bg-surface-2/40 h-10 px-4.5 text-xs cursor-pointer active:scale-[0.98]">
               <Upload size={15} className="mr-1.5" />
-              Import
+              {t('settings.import')}
               <input
                 type="file"
                 accept=".json"

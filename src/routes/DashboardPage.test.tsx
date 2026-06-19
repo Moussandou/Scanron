@@ -17,11 +17,16 @@ vi.mock('../lib/qr/image', () => ({
   qrDataUrl: vi.fn().mockResolvedValue('data:image/png;base64,iVBORw0KGgo='),
 }));
 
+import { I18nProvider } from '../lib/i18n/I18nContext';
 import DashboardPage from './DashboardPage';
 
 describe('DashboardPage', () => {
   it('renders QR cards for each friend', async () => {
-    render(<DashboardPage />);
+    render(
+      <I18nProvider>
+        <DashboardPage />
+      </I18nProvider>
+    );
     await waitFor(() => expect(screen.getByText('Goku')).toBeDefined());
   });
 });

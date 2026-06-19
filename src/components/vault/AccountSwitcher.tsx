@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { createAccount } from '../../lib/db/accounts';
 import { cn } from '../../lib/utils';
+import { useTranslation } from '../../lib/i18n/I18nContext';
 import type { AccountDoc } from '../../lib/db/types';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function AccountSwitcher({ uid, accounts, currentId, onSelect, onCreated }: Props) {
+  const { t } = useTranslation();
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState('');
 
@@ -35,7 +37,7 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onCreated 
             className={cn(
               'flex items-center justify-center rounded-lg border px-4 py-2 text-xs font-semibold font-display tracking-wider uppercase transition-all duration-200 cursor-pointer',
               isActive
-                ? 'border-primary bg-primary/10 text-primary shadow-[0_0_10px_rgba(54,226,123,0.12)]'
+                ? 'border-primary bg-primary/10 text-primary shadow-[0_0_10px_rgba(255,143,0,0.12)]'
                 : 'border-border text-muted hover:text-text hover:border-muted/30 hover:bg-surface-2/30',
             )}
           >
@@ -56,14 +58,14 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onCreated 
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && create()}
-            placeholder="Account name"
+            placeholder={t('switcher.accountName')}
             className="h-8 w-36 rounded-lg border border-border bg-surface-2 px-3 text-xs text-text placeholder:text-muted/60 focus-visible:outline-none focus-visible:border-primary/50 focus-visible:ring-1 focus-visible:ring-primary/20"
           />
           <button
             onClick={create}
             className="text-xs font-display font-semibold uppercase tracking-wider text-primary hover:text-primary/85 cursor-pointer px-1 py-1"
           >
-            Add
+            {t('switcher.add')}
           </button>
         </span>
       ) : (
@@ -71,7 +73,7 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onCreated 
           onClick={() => setCreating(true)}
           className="flex items-center gap-1.5 rounded-lg border border-dashed border-border px-4 py-2 text-xs font-semibold font-display tracking-wider uppercase text-muted hover:text-text hover:border-muted/40 hover:bg-surface-2/20 cursor-pointer transition-all duration-200"
         >
-          <Plus size={12} /> New account
+          <Plus size={12} /> {t('switcher.newAccount')}
         </button>
       )}
     </div>

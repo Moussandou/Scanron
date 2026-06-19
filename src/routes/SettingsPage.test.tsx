@@ -49,6 +49,7 @@ vi.mock('../lib/db/importExport', () => ({
   importConfig: (...args: any[]) => mockImportConfig(...args),
 }));
 
+import { I18nProvider } from '../lib/i18n/I18nContext';
 import SettingsPage from './SettingsPage';
 
 beforeEach(() => {
@@ -86,7 +87,11 @@ describe('SettingsPage', () => {
       }),
     });
 
-    render(<SettingsPage />);
+    render(
+      <I18nProvider>
+        <SettingsPage />
+      </I18nProvider>
+    );
 
     // Wait for the fields to be loaded with existing values
     await waitFor(() => {
@@ -123,7 +128,11 @@ describe('SettingsPage', () => {
       data: () => ({ displayName: 'Goku' }),
     });
 
-    render(<SettingsPage />);
+    render(
+      <I18nProvider>
+        <SettingsPage />
+      </I18nProvider>
+    );
 
     await waitFor(() => {
       expect(screen.getByLabelText(/family name/i)).toBeDefined();
@@ -146,7 +155,11 @@ describe('SettingsPage', () => {
       data: () => ({ displayName: 'Goku' }),
     });
 
-    render(<SettingsPage />);
+    render(
+      <I18nProvider>
+        <SettingsPage />
+      </I18nProvider>
+    );
 
     await waitFor(() => {
       expect(screen.getByLabelText(/family id to join/i)).toBeDefined();

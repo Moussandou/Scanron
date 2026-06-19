@@ -4,9 +4,11 @@ import { getDiscordAuthUrl } from '../lib/auth/discord';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { RadarMark } from '../components/brand/RadarMark';
+import { NavLink } from 'react-router-dom';
+import { useTranslation } from '../lib/i18n/I18nContext';
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<'signin' | 'register'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,7 +39,7 @@ export default function LoginPage() {
     }
   }
 
-  function discord() {
+  async function discord() {
     setError(null);
     try {
       const redirectUri = window.location.origin + '/auth/discord/callback';
@@ -49,18 +51,16 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-dvh bg-bg text-text flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background glow node */}
-      <div className="absolute w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,_rgba(54,226,123,0.06)_0%,_transparent_65%)] pointer-events-none z-0" />
+      <div className="absolute w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,_rgba(255,143,0,0.04)_0%,_transparent_65%)] pointer-events-none z-0" />
       
-      <div className="relative z-10 w-full max-w-md rounded-2xl border border-primary/10 bg-surface/50 backdrop-blur-lg p-8 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+      <div className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-surface/90 backdrop-blur-lg p-8 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
         <div className="mb-8 flex items-center gap-4">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary/20 blur-md rounded-full animate-pulse" />
-            <RadarMark size={40} />
+          <div className="relative flex items-center justify-center">
+            <img src="/dragon_ball.png" alt="Dragon Ball" className="h-12 w-12 object-contain animate-bounce" style={{ animationDuration: '3s' }} />
           </div>
           <div>
             <h1 className="text-xl font-display font-black tracking-widest text-text uppercase">Scanron</h1>
-            <p className="text-xs text-muted font-medium">Daily DBL Shenron QR, automated.</p>
+            <p className="text-xs text-muted font-medium">{t('login.subtitle')}</p>
           </div>
         </div>
         
@@ -97,10 +97,10 @@ export default function LoginPage() {
 
         <div className="flex flex-col gap-2.5">
           <Button variant="outline" className="w-full" onClick={google}>
-            Continue with Google
+            {t('login.google')}
           </Button>
           <Button variant="outline" className="w-full" onClick={discord}>
-            Continue with Discord
+            {t('login.discord')}
           </Button>
         </div>
         
@@ -111,6 +111,12 @@ export default function LoginPage() {
         >
           {mode === 'signin' ? 'Need an account? Register' : 'Have an account? Sign in'}
         </button>
+
+        <div className="mt-5 border-t border-border/40 pt-4 text-center">
+          <NavLink to="/" className="text-xs text-primary hover:text-primary/85 font-semibold font-display uppercase tracking-wider transition-colors">
+            {t('login.local')} →
+          </NavLink>
+        </div>
       </div>
     </div>
   );

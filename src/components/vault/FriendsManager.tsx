@@ -5,6 +5,7 @@ import { isValidFriendCode } from '../../lib/db/validation';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { useTranslation } from '../../lib/i18n/I18nContext';
 import type { FriendDoc } from '../../lib/db/types';
 
 interface Props {
@@ -15,13 +16,14 @@ interface Props {
 }
 
 export function FriendsManager({ uid, accountId, friends, onChanged }: Props) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   async function add() {
     if (!isValidFriendCode(code)) {
-      setError('Friend code must be 6-12 letters or digits');
+      setError(t('friends.validationError'));
       return;
     }
     setError(null);
@@ -40,14 +42,14 @@ export function FriendsManager({ uid, accountId, friends, onChanged }: Props) {
     <div className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end bg-surface/30 border border-border/60 p-5 rounded-2xl">
         <div className="space-y-1.5">
-          <Label htmlFor="fname" className="text-xs uppercase tracking-wider font-display font-semibold">Friend name</Label>
+          <Label htmlFor="fname" className="text-xs uppercase tracking-wider font-display font-semibold">{t('friends.name')}</Label>
           <Input id="fname" placeholder="Vegeta" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="fcode" className="text-xs uppercase tracking-wider font-display font-semibold">Friend code</Label>
+          <Label htmlFor="fcode" className="text-xs uppercase tracking-wider font-display font-semibold">{t('friends.code')}</Label>
           <Input id="fcode" placeholder="e.g. 7q8s9t2b" value={code} onChange={(e) => setCode(e.target.value)} />
         </div>
-        <Button onClick={add} className="h-10 sm:w-32">Add Friend</Button>
+        <Button onClick={add} className="h-10 sm:w-32">{t('friends.add')}</Button>
       </div>
       {error && (
         <p className="text-xs text-accent font-medium bg-accent/10 border border-accent/25 rounded-md p-2.5 animate-in fade-in duration-200">
@@ -75,7 +77,7 @@ export function FriendsManager({ uid, accountId, friends, onChanged }: Props) {
           ))}
           {friends.length === 0 && (
             <li className="px-5 py-12 text-center text-sm text-muted">
-              No friend codes in this account yet. Add codes above.
+              {t('friends.empty')}
             </li>
           )}
         </ul>

@@ -14,11 +14,16 @@ vi.mock('../lib/db/hooks', () => ({
   }),
 }));
 
+import { I18nProvider } from '../lib/i18n/I18nContext';
 import VaultPage from './VaultPage';
 
 describe('VaultPage', () => {
   it('renders the account and its friends', () => {
-    render(<VaultPage />);
+    render(
+      <I18nProvider>
+        <VaultPage />
+      </I18nProvider>
+    );
     expect(screen.getByRole('button', { name: 'Main' })).toBeDefined();
     expect(screen.getByText('Goku')).toBeDefined();
   });
