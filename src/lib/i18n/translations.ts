@@ -106,6 +106,15 @@ export const translations = {
     'settings.cloudSync': 'Cloud Sync',
     
     'footer.disclaimer': 'Fan-made tool. Not affiliated with or endorsed by Bandai Namco or Dragon Ball Legends.',
+    'footer.tagline': 'A cryptographic Dragon Radar for Dragon Ball Legends — decode friend codes and generate valid QR keys in your browser.',
+    'footer.legal': 'Legal',
+    'footer.navigate': 'Navigate',
+    'footer.privacy': 'Privacy',
+    'footer.terms': 'Terms',
+    'footer.notice': 'Legal notice',
+    'footer.builtBy': 'Built by',
+    'legal.back': 'Back to app',
+    'legal.updated': 'Last updated',
 
     'shell.dashboard': 'Dashboard',
     'shell.codes': 'Codes',
@@ -270,6 +279,15 @@ export const translations = {
     'settings.cloudSync': 'Synchro Cloud',
     
     'footer.disclaimer': 'Outil créé par des fans. Sans aucune affiliation avec Bandai Namco ou Dragon Ball Legends.',
+    'footer.tagline': "Un Dragon Radar cryptographique pour Dragon Ball Legends — décodez les codes d'ami et générez des clés QR valides dans votre navigateur.",
+    'footer.legal': 'Légal',
+    'footer.navigate': 'Navigation',
+    'footer.privacy': 'Confidentialité',
+    'footer.terms': 'Conditions',
+    'footer.notice': 'Mentions légales',
+    'footer.builtBy': 'Conçu par',
+    'legal.back': "Retour à l'app",
+    'legal.updated': 'Dernière mise à jour',
 
     'shell.dashboard': 'Tableau de Bord',
     'shell.codes': 'Codes',

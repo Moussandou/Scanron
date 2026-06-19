@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import { CapsuleCorpLogo } from '../brand/CapsuleCorpLogo';
+import { ScanronMark } from '../brand/ScanronMark';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../lib/auth/useAuth';
 import { Button } from '../ui/button';
@@ -33,10 +33,15 @@ export function AppShell({ children }: { children: ReactNode }) {
       
       <header className="sticky top-0 z-20 border-b border-border bg-surface/90 backdrop-blur-md shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4">
-          <NavLink to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-            <CapsuleCorpLogo size={24} />
-            <span className="font-display font-black text-base sm:text-lg tracking-widest text-text uppercase">
-              Scanron
+          <NavLink to="/" className="group flex items-center gap-2.5 hover:opacity-95 transition-opacity">
+            <ScanronMark size={30} animated className="shrink-0 transition-transform duration-300 group-hover:scale-105" />
+            <span className="flex flex-col leading-none">
+              <span className="font-display font-black text-base sm:text-lg tracking-[0.2em] text-text uppercase">
+                Scanron
+              </span>
+              <span className="font-mono text-[8px] tracking-[0.3em] text-muted uppercase mt-1 hidden sm:block">
+                Dragon Radar
+              </span>
             </span>
           </NavLink>
           <nav className="ml-auto flex items-center gap-1 sm:gap-1.5">

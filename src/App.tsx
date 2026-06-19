@@ -6,6 +6,7 @@ import DashboardPage from './routes/DashboardPage';
 import SettingsPage from './routes/SettingsPage';
 import DiscordCallback from './routes/DiscordCallback';
 import LoginPage from './routes/LoginPage';
+import LegalPage from './routes/legal/LegalPage';
 
 export default function App() {
   return (
@@ -22,6 +23,9 @@ export default function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/vault" element={<Navigate to="/dashboard?tab=manage" replace />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/legal/privacy" element={<LegalPage doc="privacy" />} />
+                <Route path="/legal/terms" element={<LegalPage doc="terms" />} />
+                <Route path="/legal/notice" element={<LegalPage doc="notice" />} />
               </Routes>
             </AppShell>
           </AuthGate>

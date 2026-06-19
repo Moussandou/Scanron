@@ -32,8 +32,9 @@ describe('AppShell', () => {
 
   it('shows Codes and Settings nav, but not Vault', () => {
     renderShell();
-    expect(screen.getByRole('link', { name: 'Codes' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'Settings' })).toBeDefined();
+    // Codes/Settings appear in both the header nav and the footer.
+    expect(screen.getAllByRole('link', { name: 'Codes' }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: 'Settings' }).length).toBeGreaterThan(0);
     expect(screen.queryByRole('link', { name: 'Vault' })).toBeNull();
   });
 
