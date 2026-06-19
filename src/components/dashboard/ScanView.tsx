@@ -38,7 +38,7 @@ export function ScanView({ friends, onExpand, onDownloadAll, zipping, onGoManage
         <>
           <div className="flex justify-end">
             <Button variant="outline" size="sm" className="gap-1.5" onClick={onDownloadAll} disabled={zipping}>
-              <Download size={14} /> {zipping ? 'Zipping...' : 'Download All'}
+              <Download size={14} /> {zipping ? t('qr.preparing') : t('qr.downloadAll')}
             </Button>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
