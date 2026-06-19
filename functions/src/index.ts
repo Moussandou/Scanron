@@ -1,7 +1,9 @@
 import * as admin from 'firebase-admin';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { defineString } from 'firebase-functions/params';
 import { exchangeDiscordCode } from './discordAuth';
+import { runDailyReminders } from './reminders';
 
 admin.initializeApp();
 
@@ -40,4 +42,8 @@ export const discordAuth = onCall(async (request) => {
     const msg = err instanceof Error ? err.message : 'Unknown error';
     throw new HttpsError('internal', msg);
   }
+});
+
+export const dailyReminder = onSchedule('0 * * * *', async () => {
+  await runDailyReminders(admin.firestore(), admin.messaging(), new Date());
 });
