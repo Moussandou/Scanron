@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../lib/auth/useAuth';
 import { useAccounts, useFriends } from '../lib/db/hooks';
@@ -20,7 +20,10 @@ export default function DashboardPage() {
   const { t } = useTranslation();
   const uid = user?.uid ?? null;
   const { accounts, reload: reloadAccounts } = useAccounts(uid);
-  const [currentId, setCurrentId] = useState<string | null>(null);
+  // Derive the active account during render — fall back to the first account —
+  // so there's no effect-driven flash before a selection exists.
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const currentId = selectedId ?? accounts[0]?.id ?? null;
   const { friends, reload: reloadFriends } = useFriends(uid, currentId);
   const [expanded, setExpanded] = useState<FriendWithId | null>(null);
   const [zipping, setZipping] = useState(false);
@@ -29,10 +32,6 @@ export default function DashboardPage() {
   const tab = searchParams.get('tab') === 'manage' ? 'manage' : 'scan';
   const setTab = (id: string) =>
     setSearchParams(id === 'scan' ? {} : { tab: id }, { replace: true });
-
-  useEffect(() => {
-    if (!currentId && accounts.length > 0) setCurrentId(accounts[0].id);
-  }, [accounts, currentId]);
 
   async function handleDownloadAll() {
     if (friends.length === 0) return;
@@ -54,7 +53,7 @@ export default function DashboardPage() {
             uid={uid}
             accounts={accounts}
             currentId={currentId}
-            onSelect={setCurrentId}
+            onSelect={setSelectedId}
             onCreated={reloadAccounts}
           />
         }
