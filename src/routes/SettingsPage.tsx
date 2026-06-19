@@ -318,10 +318,10 @@ export default function SettingsPage() {
       <TimeSyncControls />
 
       {/* Main Settings Form */}
-      <div className={user ? '' : 'relative group opacity-45 pointer-events-none select-none'}>
+      <div className={user ? '' : 'relative pointer-events-none select-none'}>
         {!user && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-auto">
-            <div className="bg-surface border border-border px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
+          <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl bg-surface/40 backdrop-blur-[2px] pointer-events-auto">
+            <div className="bg-surface border border-accent/30 px-4 py-2.5 rounded-xl shadow-[var(--shadow-pop)] flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
               <Lock size={13} /> {t('settings.lockReminders')}
             </div>
           </div>
@@ -473,10 +473,10 @@ export default function SettingsPage() {
       </div>
 
       {/* Family Mode Panel */}
-      <div className={user ? '' : 'relative group opacity-45 pointer-events-none select-none mt-6'}>
+      <div className={user ? '' : 'relative pointer-events-none select-none mt-6'}>
         {!user && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-auto">
-            <div className="bg-surface border border-border px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
+          <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl bg-surface/40 backdrop-blur-[2px] pointer-events-auto">
+            <div className="bg-surface border border-accent/30 px-4 py-2.5 rounded-xl shadow-[var(--shadow-pop)] flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
               <Lock size={13} /> {t('settings.lockFamily')}
             </div>
           </div>
