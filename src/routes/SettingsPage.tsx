@@ -10,7 +10,8 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { TimeSyncControls } from '../components/dashboard/TimeSyncControls';
-import { NavLink } from 'react-router-dom';
+import { PageHeader } from '../components/ui/PageHeader';
+import { SectionLabel } from '../components/ui/SectionLabel';
 import { useTranslation } from '../lib/i18n/I18nContext';
 import type { FamilyDoc } from '../lib/db/types';
 import {
@@ -305,33 +306,11 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-300">
-      <div>
-        <h1 className="text-2xl font-display font-black tracking-widest text-text uppercase">{t('settings.title')}</h1>
-        <p className="text-xs text-muted mt-1">{t('settings.subtitle')}</p>
-      </div>
+      <PageHeader title={t('settings.title')} subtitle={t('settings.subtitle')} />
 
       {error && (
         <div className="p-4 rounded-xl bg-accent/10 border border-accent/20 text-accent text-sm animate-in fade-in duration-200">
           {error}
-        </div>
-      )}
-
-      {!user && (
-        <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-300 shadow-[0_4px_20px_rgba(255,143,0,0.04)]">
-          <div className="space-y-1">
-            <h3 className="text-xs font-display font-black tracking-wider text-accent uppercase flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_6px_var(--color-accent)]" />
-              {t('settings.localActive')}
-            </h3>
-            <p className="text-xs text-muted leading-relaxed">
-              {t('settings.localActiveDesc')}
-            </p>
-          </div>
-          <NavLink to="/login" className="shrink-0">
-            <Button variant="outline" size="sm" className="border-accent/25 text-accent hover:bg-accent/10 whitespace-nowrap">
-              {t('settings.cloudSync')}
-            </Button>
-          </NavLink>
         </div>
       )}
 
@@ -349,10 +328,7 @@ export default function SettingsPage() {
         )}
         <form onSubmit={save} className="space-y-6">
           <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
-          <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
-            <Bell size={18} className="text-primary" />
-            {t('settings.notifications')}
-          </h2>
+          <SectionLabel icon={<Bell size={18} className="text-primary" />}>{t('settings.notifications')}</SectionLabel>
 
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
@@ -438,10 +414,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
-          <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
-            <Clock size={18} className="text-primary" />
-            {t('settings.schedule')}
-          </h2>
+          <SectionLabel icon={<Clock size={18} className="text-primary" />}>{t('settings.schedule')}</SectionLabel>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
@@ -509,10 +482,7 @@ export default function SettingsPage() {
           </div>
         )}
         <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
-          <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
-          <Users size={18} className="text-primary" />
-          {t('settings.familyTitle')}
-        </h2>
+          <SectionLabel icon={<Users size={18} className="text-primary" />}>{t('settings.familyTitle')}</SectionLabel>
 
         {familyId && family ? (
           <div className="space-y-5 animate-in fade-in duration-200">
@@ -605,10 +575,7 @@ export default function SettingsPage() {
 
       {/* Backup and Restore Panel */}
       <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
-        <h2 className="text-xs font-display font-bold uppercase tracking-wider text-text flex items-center gap-2.5">
-          <Upload size={18} className="text-primary" />
-          {t('settings.backupTitle')}
-        </h2>
+        <SectionLabel icon={<Upload size={18} className="text-primary" />}>{t('settings.backupTitle')}</SectionLabel>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div className="space-y-1">
