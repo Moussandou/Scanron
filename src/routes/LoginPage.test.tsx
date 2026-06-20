@@ -10,6 +10,9 @@ const { signInWithEmail, signInWithGoogle, registerWithEmail, getDiscordAuthUrl 
 }));
 vi.mock('../lib/auth/methods', () => ({ signInWithEmail, signInWithGoogle, registerWithEmail }));
 vi.mock('../lib/auth/discord', () => ({ getDiscordAuthUrl }));
+vi.mock('../lib/auth/useAuth', () => ({
+  useAuth: () => ({ user: null, loading: false }),
+}));
 
 import { I18nProvider } from '../lib/i18n/I18nContext';
 import { MemoryRouter } from 'react-router-dom';

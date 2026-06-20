@@ -5,8 +5,9 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { DragonBallIcon } from '../components/brand/DragonBallIcon';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../lib/i18n/I18nContext';
+import { useAuth } from '../lib/auth/useAuth';
 
 // Google Brand SVG Icon
 const GoogleIcon = () => (
@@ -173,6 +174,8 @@ function DiscordMockup() {
 
 export default function LoginPage() {
   const { language, setLanguage, t } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<'signin' | 'register'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -183,6 +186,12 @@ export default function LoginPage() {
   // Feature showcase index and auto-rotation control
   const [activeTab, setActiveTab] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'fr' : 'en');
