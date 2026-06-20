@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { CapsuleCorpLogo } from '../brand/CapsuleCorpLogo';
-import { DragonBallIcon } from '../brand/DragonBallIcon';
 import { StormSky } from '../landing/StormSky';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 import { qrDataUrl } from '../../lib/qr/image';
@@ -12,13 +11,12 @@ import { isValidFriendCode } from '../../lib/db/validation';
 
 const DEMO_CODE = 'dr85d9jy';
 
-// Floating dragon balls + ki orbs, fixed seeds so the composition is stable.
+// Drifting ki orbs (energy motes), fixed seeds so the composition is stable.
 const ORBS = [
-  { top: '16%', left: '6%', size: 34, dur: '7s', delay: '0s', ball: true },
-  { top: '64%', left: '14%', size: 22, dur: '8.5s', delay: '1.2s', ball: true },
   { top: '24%', left: '90%', size: 8, dur: '6s', delay: '0.5s', tone: 'var(--color-primary)' },
   { top: '78%', left: '84%', size: 6, dur: '7.5s', delay: '2s', tone: 'var(--color-signal)' },
   { top: '46%', left: '50%', size: 5, dur: '9s', delay: '3s', tone: 'var(--color-accent)' },
+  { top: '18%', left: '40%', size: 4, dur: '8s', delay: '1.5s', tone: 'var(--color-signal)' },
 ];
 
 /**
@@ -87,22 +85,29 @@ export function LandingHero() {
       {/* Warm orange aura so the energy reads against the green storm */}
       <div className="pointer-events-none absolute -top-32 right-10 h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle,rgba(255,122,0,0.14)_0%,transparent_62%)]" />
 
-      {/* Floating Dragon Balls + ki orbs */}
+      {/* Shenron looming in the storm, behind the console */}
+      <img
+        src="/shenron-ascii.svg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-[8%] top-1/2 w-[min(880px,80vw)] max-w-none -translate-y-1/2 animate-[floaty_9s_ease-in-out_infinite] opacity-[0.55] [filter:drop-shadow(0_0_30px_rgba(16,185,129,0.5))] [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_85%)]"
+      />
+
+      {/* Drifting ki orbs */}
       {ORBS.map((o, i) => (
         <span
           key={i}
-          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
-          style={{ top: o.top, left: o.left, animation: `floaty ${o.dur} ease-in-out ${o.delay} infinite` }}
-        >
-          {o.ball ? (
-            <DragonBallIcon size={o.size} style={{ filter: 'drop-shadow(0 0 14px rgba(255,122,0,0.4))', opacity: 0.85 }} />
-          ) : (
-            <span
-              className="block rounded-full"
-              style={{ width: o.size, height: o.size, background: o.tone, boxShadow: `0 0 12px ${o.tone}` }}
-            />
-          )}
-        </span>
+          className="pointer-events-none absolute block -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{
+            top: o.top,
+            left: o.left,
+            width: o.size,
+            height: o.size,
+            background: o.tone,
+            boxShadow: `0 0 12px ${o.tone}`,
+            animation: `floaty ${o.dur} ease-in-out ${o.delay} infinite`,
+          }}
+        />
       ))}
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 lg:grid-cols-12">
