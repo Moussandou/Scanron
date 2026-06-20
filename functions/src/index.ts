@@ -1,16 +1,16 @@
 import * as admin from 'firebase-admin';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import { defineString } from 'firebase-functions/params';
+import { defineString, defineSecret } from 'firebase-functions/params';
 import { exchangeDiscordCode } from './discordAuth';
 import { runDailyReminders } from './reminders';
 
 admin.initializeApp();
 
 const discordClientId = defineString('DISCORD_CLIENT_ID');
-const discordClientSecret = defineString('DISCORD_CLIENT_SECRET');
+const discordClientSecret = defineSecret('DISCORD_CLIENT_SECRET');
 
-export const discordAuth = onCall(async (request) => {
+export const discordAuth = onCall({ secrets: [discordClientSecret] }, async (request) => {
   const { code, redirectUri } = request.data as { code?: string; redirectUri?: string };
 
   if (!code || !redirectUri) {
