@@ -44,6 +44,16 @@
 @keyframes radar-sweep {
   to { transform: rotate(360deg); }
 }
+@keyframes packet {
+  0% { left: 0%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
 
 /* Respect users who prefer reduced motion — this UI leans on pulses, pings,
    spins and slide-ins, so calm them all rather than auditing each one. */
