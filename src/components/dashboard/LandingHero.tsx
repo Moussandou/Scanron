@@ -11,6 +11,15 @@ import { isValidFriendCode } from '../../lib/db/validation';
 
 const DEMO_CODE = 'dr85d9jy';
 
+// Radar graticule: 60 tick marks, every 5th major. Bearings and a few blips
+// give the scope a real instrument feel.
+const TICKS = Array.from({ length: 60 }, (_, i) => i * 6);
+const BLIPS = [
+  { a: 34, r: 96, tone: 'var(--color-primary)' },
+  { a: 168, r: 58, tone: 'var(--color-accent)' },
+  { a: 286, r: 112, tone: 'var(--color-signal)' },
+];
+
 // Drifting ki orbs (energy motes), fixed seeds so the composition is stable.
 const ORBS = [
   { top: '24%', left: '90%', size: 8, dur: '6s', delay: '0.5s', tone: 'var(--color-primary)' },
@@ -113,18 +122,6 @@ export function LandingHero() {
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 lg:grid-cols-12">
         {/* Pitch */}
         <div className="animate-in fade-in slide-in-from-bottom-4 space-y-6 duration-500 lg:col-span-6 xl:col-span-7">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1.5 backdrop-blur-sm">
-            <CapsuleCorpLogo size={16} />
-            <span className="h-3.5 w-px bg-white/15" />
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
-            </span>
-            <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-white/70">
-              {t('landing.liveDecoder')}
-            </span>
-          </div>
-
           <h1 className="font-display text-5xl font-black uppercase leading-[0.95] tracking-tight [text-shadow:0_0_40px_rgba(255,122,0,0.25)] sm:text-6xl xl:text-7xl">
             {t('landing.title')}
           </h1>
@@ -160,90 +157,136 @@ export function LandingHero() {
               {/* Aura behind the console */}
               <div className="pointer-events-none absolute -inset-6 animate-[aura-pulse_5s_ease-in-out_infinite] rounded-[2rem] bg-[radial-gradient(circle_at_50%_40%,rgba(255,122,0,0.22),transparent_70%)]" />
 
-              <div className="relative overflow-hidden rounded-2xl border border-accent/20 bg-[#090f19]/85 shadow-[0_40px_100px_-24px_rgba(0,0,0,0.8)] backdrop-blur-sm">
-                {/* Console header */}
-                <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-4 py-2.5">
-                  <span className="font-display text-[10px] font-black uppercase tracking-widest text-white/70">
-                    Capsule Corp // Scope
-                  </span>
-                  <div className="flex gap-1.5">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-                    <span className="h-2 w-2 rounded-full bg-accent" />
-                    <span className="h-2 w-2 rounded-full bg-white/20" />
-                  </div>
-                </div>
+              <div className="relative rounded-[1.6rem] bg-[linear-gradient(140deg,rgba(255,122,0,0.55),rgba(14,165,233,0.18)_45%,rgba(16,185,129,0.5))] p-[1.5px] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.85)]">
+                <div className="relative overflow-hidden rounded-[1.55rem] bg-[#070d15]/92 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
+                  {/* Holographic scanlines + corner brackets */}
+                  <div className="pointer-events-none absolute inset-0 z-30 opacity-[0.05] [background:repeating-linear-gradient(0deg,#fff_0,#fff_1px,transparent_1px,transparent_3px)]" />
+                  <span className="pointer-events-none absolute left-2.5 top-2.5 z-30 h-4 w-4 rounded-tl border-l border-t border-white/25" />
+                  <span className="pointer-events-none absolute right-2.5 top-2.5 z-30 h-4 w-4 rounded-tr border-r border-t border-white/25" />
+                  <span className="pointer-events-none absolute bottom-2.5 left-2.5 z-30 h-4 w-4 rounded-bl border-b border-l border-white/25" />
+                  <span className="pointer-events-none absolute bottom-2.5 right-2.5 z-30 h-4 w-4 rounded-br border-b border-r border-white/25" />
 
-                {/* Input */}
-                <div className="px-4 pt-4">
-                  <label className="mb-1.5 block font-mono text-[9px] uppercase tracking-widest text-white/40">
-                    {t('landing.tryLabel')}
-                  </label>
-                  <div className="flex items-center gap-2 rounded-lg border border-white/15 bg-black/30 px-3 transition-colors focus-within:border-accent/50">
-                    <span className="font-mono text-sm text-accent">&#9656;</span>
-                    <input
-                      value={code}
-                      onChange={(e) => setCode(e.target.value.trim())}
-                      spellCheck={false}
-                      autoComplete="off"
-                      placeholder={t('landing.codePlaceholder')}
-                      className="flex-1 bg-transparent py-2.5 font-mono text-sm tracking-wider text-white placeholder:text-white/30 focus:outline-none"
-                    />
-                    <span
-                      className={`font-mono text-[9px] font-bold uppercase tracking-wider ${valid ? 'text-signal' : 'text-white/30'}`}
-                    >
-                      {valid ? t('landing.locked') : code ? t('landing.invalid') : t('landing.awaiting')}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Scope */}
-                <div className="relative flex h-[300px] items-center justify-center p-6">
-                  <div className="absolute h-[260px] w-[260px] rounded-full border-2 border-accent/15" />
-                  <div className="absolute h-[180px] w-[180px] rounded-full border border-accent/15" />
-                  <div className="absolute h-[100px] w-[100px] rounded-full border border-accent/20" />
-                  <div className="absolute h-px w-[260px] bg-accent/10" />
-                  <div className="absolute h-[260px] w-px bg-accent/10" />
-                  <div
-                    className="absolute h-[260px] w-[260px] animate-[radar-sweep_6s_linear_infinite] rounded-full opacity-70"
-                    style={{
-                      background: 'conic-gradient(from 0deg, rgba(255,122,0,0.22) 0deg, transparent 55deg 360deg)',
-                      transformOrigin: 'center',
-                    }}
-                  />
-
-                  {valid && src ? (
-                    <div className="animate-in fade-in zoom-in-90 relative z-10 duration-300">
-                      <div className="relative h-[150px] w-[150px] rounded-xl bg-white p-3 shadow-[0_0_30px_rgba(16,185,129,0.35)]">
-                        <span className="absolute left-1.5 top-1.5 h-3.5 w-3.5 rounded-tl-sm border-l-2 border-t-2 border-primary" />
-                        <span className="absolute right-1.5 top-1.5 h-3.5 w-3.5 rounded-tr-sm border-r-2 border-t-2 border-primary" />
-                        <span className="absolute bottom-1.5 left-1.5 h-3.5 w-3.5 rounded-bl-sm border-b-2 border-l-2 border-primary" />
-                        <span className="absolute bottom-1.5 right-1.5 h-3.5 w-3.5 rounded-br-sm border-b-2 border-r-2 border-primary" />
-                        <img src={src} alt="Generated Shenron QR" className="h-full w-full object-contain" />
-                        <span className="absolute left-0 h-[2px] w-full animate-[scan_2.6s_linear_infinite] bg-accent/70 shadow-[0_0_8px_var(--color-accent)]" />
+                  {/* Brand bar */}
+                  <div className="relative flex items-center justify-between border-b border-white/10 bg-white/[0.02] px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <CapsuleCorpLogo size={18} />
+                      <div className="leading-none">
+                        <div className="font-display text-[11px] font-black uppercase tracking-[0.18em] text-white">Dragon Radar</div>
+                        <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.25em] text-white/40">Capsule Corp · MK II</div>
                       </div>
-                      <span className="absolute -right-2 -top-2 flex h-3 w-3">
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-3.5 items-end gap-0.5">
+                        {[4, 7, 10, 13].map((h, i) => (
+                          <span key={i} className="w-0.5 rounded-sm bg-signal" style={{ height: h, opacity: 0.4 + i * 0.14 }} />
+                        ))}
+                      </div>
+                      <span className="relative flex h-1.5 w-1.5">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-                        <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-[#090f19] bg-signal" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
                       </span>
+                      <span className="font-mono text-[8px] font-bold uppercase tracking-widest text-signal">Online</span>
                     </div>
-                  ) : (
-                    <div className="relative z-10 flex flex-col items-center gap-3 text-center">
-                      <div className="h-4 w-4 animate-ping rounded-full border-2 border-white/80 bg-accent shadow-[0_0_12px_var(--color-accent)]" />
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-white/40">
-                        {t('landing.awaiting')}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                  </div>
 
-                {/* Footer readout */}
-                <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-white/[0.03] px-4 py-3">
-                  <span className="truncate font-mono text-[10px] text-accent/80">
-                    {valid ? searchCode(code) : '—'}
-                  </span>
-                  <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-signal/80">
-                    {valid ? t('landing.realQr') : ''}
-                  </span>
+                  {/* Input */}
+                  <div className="relative px-4 pt-4">
+                    <div className="flex items-center gap-2 rounded-xl border border-white/12 bg-black/40 px-2 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition focus-within:border-accent/60 focus-within:shadow-[0_0_0_1px_rgba(14,165,233,0.35),inset_0_1px_0_rgba(255,255,255,0.05)]">
+                      <span className="rounded-md bg-accent/15 px-2 py-1.5 font-mono text-[8px] font-bold uppercase tracking-wider text-accent">Code</span>
+                      <input
+                        value={code}
+                        onChange={(e) => setCode(e.target.value.trim())}
+                        spellCheck={false}
+                        autoComplete="off"
+                        placeholder={t('landing.codePlaceholder')}
+                        className="flex-1 bg-transparent py-2 font-mono text-sm tracking-[0.18em] text-white placeholder:text-white/25 focus:outline-none"
+                      />
+                      <span className={`rounded-md px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-wider ${valid ? 'bg-signal/15 text-signal' : 'bg-white/5 text-white/40'}`}>
+                        {valid ? t('landing.locked') : code ? t('landing.invalid') : t('landing.awaiting')}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Scope */}
+                  <div className="relative flex h-[300px] items-center justify-center">
+                    {/* Graticule ticks */}
+                    <div className="absolute h-[250px] w-[250px]">
+                      {TICKS.map((a) => {
+                        const major = a % 30 === 0;
+                        return (
+                          <span key={a} className="absolute left-1/2 top-0 origin-[center_125px] -translate-x-1/2" style={{ transform: `rotate(${a}deg)` }}>
+                            <span className={`block w-px ${major ? 'h-3 bg-accent/55' : 'h-1.5 bg-accent/25'}`} />
+                          </span>
+                        );
+                      })}
+                    </div>
+                    {/* Rings + crosshair */}
+                    <div className="absolute h-[250px] w-[250px] rounded-full border border-accent/15" />
+                    <div className="absolute h-[172px] w-[172px] rounded-full border border-accent/12" />
+                    <div className="absolute h-[96px] w-[96px] rounded-full border border-accent/15" />
+                    <div className="absolute h-px w-[250px] bg-accent/10" />
+                    <div className="absolute h-[250px] w-px bg-accent/10" />
+                    {/* Bearings */}
+                    <div className="pointer-events-none absolute h-[250px] w-[250px] font-mono text-[7px] tracking-widest text-white/30">
+                      <span className="absolute left-1/2 top-0.5 -translate-x-1/2">N</span>
+                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2">S</span>
+                      <span className="absolute left-0.5 top-1/2 -translate-y-1/2">W</span>
+                      <span className="absolute right-0.5 top-1/2 -translate-y-1/2">E</span>
+                    </div>
+                    {/* Sweep */}
+                    <div
+                      className="absolute h-[250px] w-[250px] animate-[radar-sweep_6s_linear_infinite] rounded-full"
+                      style={{ background: 'conic-gradient(from 0deg, rgba(255,122,0,0.30) 0deg, rgba(255,122,0,0.05) 42deg, transparent 72deg 360deg)', transformOrigin: 'center' }}
+                    />
+                    {/* Blips — fade out once a target is locked */}
+                    {!(valid && src) &&
+                      BLIPS.map((b, i) => (
+                        <span key={i} className="absolute left-1/2 top-1/2" style={{ transform: `rotate(${b.a}deg) translateY(-${b.r}px)` }}>
+                          <span className="block h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full" style={{ background: b.tone, boxShadow: `0 0 8px ${b.tone}` }} />
+                        </span>
+                      ))}
+
+                    {/* Center result */}
+                    {valid && src ? (
+                      <div className="animate-in fade-in zoom-in-90 relative z-20 duration-300">
+                        <div className="relative h-[152px] w-[152px] rounded-2xl bg-white p-3 shadow-[0_0_44px_rgba(16,185,129,0.45)] ring-1 ring-white/40">
+                          <span className="absolute left-1.5 top-1.5 h-3.5 w-3.5 rounded-tl-sm border-l-2 border-t-2 border-primary" />
+                          <span className="absolute right-1.5 top-1.5 h-3.5 w-3.5 rounded-tr-sm border-r-2 border-t-2 border-primary" />
+                          <span className="absolute bottom-1.5 left-1.5 h-3.5 w-3.5 rounded-bl-sm border-b-2 border-l-2 border-primary" />
+                          <span className="absolute bottom-1.5 right-1.5 h-3.5 w-3.5 rounded-br-sm border-b-2 border-r-2 border-primary" />
+                          <img src={src} alt="Generated Shenron QR" className="h-full w-full object-contain" />
+                          <span className="absolute left-0 h-[2px] w-full animate-[scan_2.6s_linear_infinite] bg-accent/70 shadow-[0_0_8px_var(--color-accent)]" />
+                        </div>
+                        <span className="absolute -right-2 -top-2 flex h-3 w-3">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
+                          <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-[#070d15] bg-signal" />
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="relative z-20 flex flex-col items-center gap-3 text-center">
+                        <div className="h-4 w-4 animate-ping rounded-full border-2 border-white/80 bg-accent shadow-[0_0_12px_var(--color-accent)]" />
+                        <span className="font-mono text-[9px] uppercase tracking-widest text-white/40">
+                          {t('landing.awaiting')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Telemetry strip */}
+                  <div className="grid grid-cols-[1.5fr_1fr_1fr] divide-x divide-white/10 border-t border-white/10 bg-white/[0.02]">
+                    <div className="px-3 py-2.5">
+                      <div className="font-mono text-[7px] uppercase tracking-widest text-white/35">Seed</div>
+                      <div className="mt-0.5 truncate font-mono text-[10px] text-accent">{valid ? searchCode(code) : '—'}</div>
+                    </div>
+                    <div className="px-3 py-2.5">
+                      <div className="font-mono text-[7px] uppercase tracking-widest text-white/35">Range</div>
+                      <div className="mt-0.5 font-mono text-[10px] text-white/70">On-device</div>
+                    </div>
+                    <div className="px-3 py-2.5">
+                      <div className="font-mono text-[7px] uppercase tracking-widest text-white/35">Output</div>
+                      <div className={`mt-0.5 font-mono text-[10px] ${valid ? 'text-signal' : 'text-white/40'}`}>{valid ? 'Real QR' : 'Idle'}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
