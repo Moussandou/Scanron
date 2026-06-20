@@ -34,6 +34,7 @@ jobs:
       - name: Deploy to Firebase
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > gcp-key.json
+          echo 'DISCORD_CLIENT_ID="1517883839349784696"' > functions/.env
           npx firebase-tools deploy --non-interactive --project scanron
           rm -f gcp-key.json
         env:
