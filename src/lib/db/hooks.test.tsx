@@ -51,26 +51,6 @@ describe('useAccounts', () => {
     expect(result.current.accounts).toHaveLength(1);
     expect(listAccounts).toHaveBeenCalledWith(null);
   });
-
-  it('appends family pseudo-account if user has a familyId', async () => {
-    listAccounts.mockResolvedValue([{ id: 'a1', name: 'Main', order: 0, createdAt: 0 }]);
-    mockGetDoc.mockResolvedValueOnce({
-      exists: () => true,
-      data: () => ({ familyId: 'fam999' }),
-    });
-    mockGetFamily.mockResolvedValueOnce({
-      name: 'Universe 7',
-      createdAt: 12345,
-    });
-
-    const { result } = renderHook(() => useAccounts('u1'));
-    await waitFor(() => expect(result.current.loading).toBe(false));
-
-    expect(result.current.accounts).toHaveLength(2);
-    expect(result.current.accounts[0].id).toBe('a1');
-    expect(result.current.accounts[1].id).toBe('family:fam999');
-    expect(result.current.accounts[1].name).toBe('👪 Family: Universe 7');
-  });
 });
 
 describe('useFriends', () => {
@@ -89,17 +69,5 @@ describe('useFriends', () => {
     expect(result.current.friends).toHaveLength(1);
     expect(listFriends).toHaveBeenCalledWith('u1', 'a1');
     expect(mockListFamilyFriends).not.toHaveBeenCalled();
-  });
-
-  it('loads family friends when accountId starts with family:', async () => {
-    mockListFamilyFriends.mockResolvedValue([{ id: 'f2', name: 'Bulma', friendCode: 'bu123456' }]);
-
-    const { result } = renderHook(() => useFriends('u1', 'family:fam999'));
-    await waitFor(() => expect(result.current.loading).toBe(false));
-
-    expect(result.current.friends).toHaveLength(1);
-    expect(result.current.friends[0].name).toBe('Bulma');
-    expect(mockListFamilyFriends).toHaveBeenCalledWith('fam999');
-    expect(listFriends).not.toHaveBeenCalled();
   });
 });

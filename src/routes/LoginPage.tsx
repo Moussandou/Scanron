@@ -169,63 +169,7 @@ function DiscordMockup() {
   );
 }
 
-// High-fidelity shared family list representation
-function FamilyMockup() {
-  return (
-    <div className="w-full bg-surface border border-border/40 rounded-2xl p-4 shadow-sm flex flex-col gap-3.5 text-left relative overflow-hidden font-sans">
-      <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-accent/5 rounded-full blur-xl pointer-events-none" />
-      
-      <div className="flex items-center justify-between border-b border-border/30 pb-2">
-        <div className="flex flex-col">
-          <span className="text-[8px] text-muted uppercase font-bold tracking-widest font-display">Shared Squad</span>
-          <span className="text-text font-black text-xs font-display tracking-wider">CAPSULE CORP</span>
-        </div>
-        <span className="text-[8px] bg-accent/10 border border-accent/25 text-accent px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">3 Members</span>
-      </div>
-      
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between bg-surface-2/30 p-2 rounded-lg border border-border/10">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary text-primary font-bold text-[9px] flex items-center justify-center uppercase">
-              GK
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold leading-none">Goku</span>
-              <span className="text-[8px] text-muted mt-0.5">Owner</span>
-            </div>
-          </div>
-          <span className="text-[8px] font-mono font-bold text-text bg-surface px-1.5 py-0.5 rounded border border-border/30">dr85d9jy</span>
-        </div>
 
-        <div className="flex items-center justify-between bg-surface-2/30 p-2 rounded-lg border border-border/10">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-accent/20 border border-accent text-accent font-bold text-[9px] flex items-center justify-center uppercase">
-              VG
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold leading-none">Vegeta</span>
-              <span className="text-[8px] text-signal mt-0.5">Synced 1m ago</span>
-            </div>
-          </div>
-          <span className="text-[8px] font-mono font-bold text-text bg-surface px-1.5 py-0.5 rounded border border-border/30">7q8s9t2b</span>
-        </div>
-
-        <div className="flex items-center justify-between bg-surface-2/30 p-2 rounded-lg border border-border/10 opacity-70">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-muted/20 border border-muted text-muted font-bold text-[9px] flex items-center justify-center uppercase">
-              PC
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold leading-none text-muted">Piccolo</span>
-              <span className="text-[8px] text-muted mt-0.5">Offline</span>
-            </div>
-          </div>
-          <span className="text-[8px] font-mono font-bold text-muted bg-surface/50 px-1.5 py-0.5 rounded border border-border/20">9a8b7c6d</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function LoginPage() {
   const { language, setLanguage, t } = useTranslation();
@@ -265,16 +209,7 @@ export default function LoginPage() {
       descKey: 'login.showcase.discord.desc',
       mockup: <DiscordMockup />
     },
-    {
-      icon: (
-        <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-      titleKey: 'login.showcase.family.title',
-      descKey: 'login.showcase.family.desc',
-      mockup: <FamilyMockup />
-    }
+
   ];
 
   // Rotate mockup screens automatically

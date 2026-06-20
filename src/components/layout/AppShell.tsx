@@ -8,6 +8,8 @@ import { useTranslation } from '../../lib/i18n/I18nContext';
 import { LocalModeBanner } from './LocalModeBanner';
 import { Footer } from './Footer';
 import { RadarBackdrop } from './RadarBackdrop';
+import { signOutUser } from '../../lib/auth/methods';
+import { LogOut } from 'lucide-react';
 
 function navClass({ isActive }: { isActive: boolean }) {
   return cn(
@@ -54,7 +56,23 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {language === 'en' ? 'FR' : 'EN'}
             </button>
-            {!user && (
+            {user ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  try {
+                    await signOutUser();
+                  } catch (err) {
+                    console.error('Logout failed:', err);
+                  }
+                }}
+                className="border-border hover:bg-surface-2 text-muted hover:text-text flex items-center gap-1.5 h-8 px-2.5 ml-1 cursor-pointer"
+              >
+                <LogOut size={13} className="shrink-0" />
+                <span className="hidden sm:inline">{t('shell.logout')}</span>
+              </Button>
+            ) : (
               <NavLink to="/login" className="ml-1">
                 <Button size="sm" variant="outline" className="border-accent/25 text-accent hover:border-accent/40 hover:bg-accent/10 hover:shadow-[0_0_10px_rgba(14,165,233,0.1)] flex items-center gap-1 h-8 px-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />

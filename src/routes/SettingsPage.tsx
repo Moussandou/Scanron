@@ -4,7 +4,6 @@ import { useAuth } from '../lib/auth/useAuth';
 import { getDb } from '../lib/firebase/app';
 import { userPath } from '../lib/db/paths';
 import { requestPushPermission, disablePushNotifications } from '../lib/auth/push';
-import { createFamily, joinFamily, leaveFamily, getFamily } from '../lib/db/families';
 import { exportConfig, importConfig } from '../lib/db/importExport';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -13,7 +12,6 @@ import { TimeSyncControls } from '../components/dashboard/TimeSyncControls';
 import { PageHeader } from '../components/ui/PageHeader';
 import { SectionLabel } from '../components/ui/SectionLabel';
 import { useTranslation } from '../lib/i18n/I18nContext';
-import type { FamilyDoc } from '../lib/db/types';
 import {
   Bell,
   Clock,
@@ -22,12 +20,6 @@ import {
   CheckCircle,
   Download,
   Upload,
-  Users,
-  Copy,
-  Trash2,
-  LogOut,
-  Plus,
-  Shield,
   Lock,
 } from 'lucide-react';
 
@@ -49,12 +41,7 @@ export default function SettingsPage() {
   // Timezones
   const [timezones, setTimezones] = useState<string[]>([]);
 
-  // Family states
-  const [family, setFamily] = useState<FamilyDoc | null>(null);
-  const [familyId, setFamilyId] = useState<string | null>(null);
-  const [familyNameInput, setFamilyNameInput] = useState('');
-  const [familyIdInput, setFamilyIdInput] = useState('');
-  const [familyBusy, setFamilyBusy] = useState(false);
+
 
   // Webhook testing states
   const [testingWebhook, setTestingWebhook] = useState(false);
@@ -67,21 +54,6 @@ export default function SettingsPage() {
       setTimezones(['UTC', 'America/New_York', 'Europe/Paris', 'Asia/Tokyo']);
     }
   }, []);
-
-  async function reloadFamily(fid: string | null) {
-    if (!fid) {
-      setFamilyId(null);
-      setFamily(null);
-      return;
-    }
-    try {
-      setFamilyId(fid);
-      const fDoc = await getFamily(fid);
-      setFamily(fDoc);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to reload family info');
-    }
-  }
 
   useEffect(() => {
     if (!user) {
@@ -103,9 +75,6 @@ export default function SettingsPage() {
             setPushEnabled(!!data.notificationSettings.push);
             setSendAtHour(data.notificationSettings.sendAtHour ?? 9);
             setTimezone(data.notificationSettings.timezone || 'UTC');
-          }
-          if (data.familyId) {
-            await reloadFamily(data.familyId);
           }
         }
       } catch (err) {
@@ -234,65 +203,6 @@ export default function SettingsPage() {
       }
     };
     reader.readAsText(file);
-  }
-
-  // Family actions
-  async function handleCreateFamily(e: React.FormEvent) {
-    e.preventDefault();
-    if (!user || !familyNameInput) return;
-    setFamilyBusy(true);
-    setError(null);
-    try {
-      const fid = await createFamily(familyNameInput, user.uid);
-      await reloadFamily(fid);
-      setFamilyNameInput('');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create family');
-    } finally {
-      setFamilyBusy(false);
-    }
-  }
-
-  async function handleJoinFamily(e: React.FormEvent) {
-    e.preventDefault();
-    if (!user || !familyIdInput) return;
-    setFamilyBusy(true);
-    setError(null);
-    try {
-      await joinFamily(familyIdInput, user.uid);
-      await reloadFamily(familyIdInput);
-      setFamilyIdInput('');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to join family');
-    } finally {
-      setFamilyBusy(false);
-    }
-  }
-
-  async function handleLeaveFamily() {
-    if (!user || !familyId) return;
-    const isOwner = family?.ownerUid === user.uid;
-    const confirmMsg = isOwner
-      ? 'Are you sure you want to disband the family? This will delete the family and all its shared friends.'
-      : 'Are you sure you want to leave the family?';
-
-    if (!window.confirm(confirmMsg)) return;
-
-    setFamilyBusy(true);
-    setError(null);
-    try {
-      await leaveFamily(familyId, user.uid);
-      await reloadFamily(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to leave family');
-    } finally {
-      setFamilyBusy(false);
-    }
-  }
-
-  function copyFamilyId() {
-    if (!familyId) return;
-    navigator.clipboard.writeText(familyId);
   }
 
   if (loading) {
@@ -472,106 +382,7 @@ export default function SettingsPage() {
         </form>
       </div>
 
-      {/* Family Mode Panel */}
-      <div className={user ? '' : 'relative pointer-events-none select-none mt-6'}>
-        {!user && (
-          <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl bg-surface/40 backdrop-blur-[2px] pointer-events-auto">
-            <div className="bg-surface border border-accent/30 px-4 py-2.5 rounded-xl shadow-[var(--shadow-pop)] flex items-center gap-2 text-[10px] font-display font-bold uppercase tracking-wider text-accent">
-              <Lock size={13} /> {t('settings.lockFamily')}
-            </div>
-          </div>
-        )}
-        <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
-          <SectionLabel icon={<Users size={18} className="text-primary" />}>{t('settings.familyTitle')}</SectionLabel>
 
-        {familyId && family ? (
-          <div className="space-y-5 animate-in fade-in duration-200">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-primary/10 bg-primary/5">
-              <div className="space-y-1.5">
-                <span className="text-[10px] text-primary/80 block uppercase tracking-wider font-display font-bold">{t('settings.familyActive')}</span>
-                <span className="text-base font-bold text-text">{family.name}</span>
-                <span className="text-[10px] text-muted block font-mono mt-1 select-all bg-surface px-2 py-0.5 rounded border border-border/80 w-fit">ID: {familyId}</span>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={copyFamilyId} className="h-8.5">
-                  <Copy size={13} className="mr-1.5" />
-                  Copy ID
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleLeaveFamily}
-                  disabled={familyBusy}
-                  className="h-8.5 border-accent/20 text-accent hover:bg-accent/10"
-                >
-                  {family?.ownerUid === user?.uid ? (
-                    <>
-                      <Trash2 size={13} className="mr-1.5" />
-                      {t('settings.familyDisband')}
-                    </>
-                  ) : (
-                    <>
-                      <LogOut size={13} className="mr-1.5" />
-                      {t('settings.familyLeave')}
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-[10px] text-muted block uppercase tracking-wider font-display font-bold">{t('settings.familyMembers')}</span>
-              <div className="divide-y divide-border/30 max-h-36 overflow-y-auto rounded-lg border border-border/40 bg-surface/20">
-                {family.memberUids.map((uid) => (
-                  <div key={uid} className="text-xs text-text flex items-center gap-2 px-3 py-2 hover:bg-surface-2/20 transition-colors">
-                    <Shield size={12} className={uid === family.ownerUid ? 'text-accent' : 'text-muted'} />
-                    <span className="font-mono tracking-wide">{uid}</span>
-                    {uid === family.ownerUid && <span className="text-[9px] font-display font-bold uppercase text-accent bg-accent/15 px-1.5 py-0.5 rounded border border-accent/10">{t('settings.familyOwner')}</span>}
-                    {uid === user?.uid && <span className="text-[9px] font-display font-bold uppercase text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/10">You</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in duration-200">
-            <form onSubmit={handleCreateFamily} className="space-y-3.5">
-              <div className="space-y-1.5">
-                <Label htmlFor="familyName" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.familyName')}</Label>
-                <Input
-                  id="familyName"
-                  placeholder="e.g. Z Fighters"
-                  value={familyNameInput}
-                  onChange={(e) => setFamilyNameInput(e.target.value)}
-                  required
-                />
-              </div>
-              <Button type="submit" disabled={familyBusy} className="w-full">
-                {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : <Plus className="w-4 h-4 mr-1.5" />}
-                {t('settings.familyCreate')}
-              </Button>
-            </form>
-
-            <form onSubmit={handleJoinFamily} className="space-y-3.5">
-              <div className="space-y-1.5">
-                <Label htmlFor="familyIdToJoin" className="text-xs uppercase tracking-wider font-display font-semibold">{t('settings.familyIdToJoin')}</Label>
-                <Input
-                  id="familyIdToJoin"
-                  placeholder="Enter family invite ID..."
-                  value={familyIdInput}
-                  onChange={(e) => setFamilyIdInput(e.target.value)}
-                  required
-                />
-              </div>
-              <Button type="submit" disabled={familyBusy} variant="outline" className="w-full">
-                {familyBusy ? <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> : <Users className="w-4 h-4 mr-1.5" />}
-                {t('settings.familyJoin')}
-              </Button>
-            </form>
-          </div>
-        )}
-        </div>
-      </div>
 
       {/* Backup and Restore Panel */}
       <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
