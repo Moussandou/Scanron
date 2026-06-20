@@ -32,8 +32,9 @@ jobs:
         working-directory: functions
 
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy
+        run: |
+          echo '${{ secrets.GCP_SA_KEY }}' > gcp-key.json
+          npx firebase-tools deploy --non-interactive --project scanron
+          rm -f gcp-key.json
         env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          GOOGLE_APPLICATION_CREDENTIALS: gcp-key.json
