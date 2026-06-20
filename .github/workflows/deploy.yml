@@ -35,7 +35,7 @@ jobs:
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > gcp-key.json
           echo 'DISCORD_CLIENT_ID="1517883839349784696"' > functions/.env
-          npx firebase-tools deploy --non-interactive --project scanron
+          npx firebase-tools deploy --non-interactive --project scanron --force
           rm -f gcp-key.json
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcp-key.json
