@@ -104,6 +104,8 @@ export const translations = {
     'settings.localActive': 'Local Mode Active',
     'settings.localActiveDesc': 'Your codes are stored safely in local storage. Connect to cloud to back up, share codes with your family, and schedule automated reminders!',
     'settings.cloudSync': 'Cloud Sync',
+    'settings.replayTour': 'Replay guided tour',
+    'settings.replayTourDesc': 'Show the first-run walkthrough again on the dashboard.',
     
     'footer.disclaimer': 'Fan-made tool. Not affiliated with or endorsed by Bandai Namco or Dragon Ball Legends.',
     'footer.tagline': 'A cryptographic Dragon Radar for Dragon Ball Legends — decode friend codes and generate valid QR keys in your browser.',
@@ -325,6 +327,8 @@ export const translations = {
     'settings.localActive': 'Mode Local Actif',
     'settings.localActiveDesc': 'Vos codes sont stockés localement. Connectez-vous au cloud pour sauvegarder, partager des codes avec votre famille et planifier des rappels !',
     'settings.cloudSync': 'Synchro Cloud',
+    'settings.replayTour': 'Relancer le tour guidé',
+    'settings.replayTourDesc': 'Réaffiche le parcours d\'introduction sur le tableau de bord.',
     
     'footer.disclaimer': 'Outil créé par des fans. Sans aucune affiliation avec Bandai Namco ou Dragon Ball Legends.',
     'footer.tagline': "Un Dragon Radar cryptographique pour Dragon Ball Legends — décodez les codes d'ami et générez des clés QR valides dans votre navigateur.",

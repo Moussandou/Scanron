@@ -50,6 +50,7 @@ vi.mock('../lib/db/importExport', () => ({
 }));
 
 import { I18nProvider } from '../lib/i18n/I18nContext';
+import { MemoryRouter } from 'react-router-dom';
 import SettingsPage from './SettingsPage';
 
 beforeEach(() => {
@@ -88,9 +89,11 @@ describe('SettingsPage', () => {
     });
 
     render(
-      <I18nProvider>
-        <SettingsPage />
-      </I18nProvider>
+      <MemoryRouter>
+        <I18nProvider>
+          <SettingsPage />
+        </I18nProvider>
+      </MemoryRouter>
     );
 
     // Wait for the fields to be loaded with existing values

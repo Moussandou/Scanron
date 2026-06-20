@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../lib/auth/useAuth';
 import { getDb } from '../lib/firebase/app';
 import { userPath } from '../lib/db/paths';
 import { requestPushPermission, disablePushNotifications } from '../lib/auth/push';
 import { exportConfig, importConfig } from '../lib/db/importExport';
+import { ONBOARDING_DONE_KEY } from '../lib/onboarding/useOnboarding';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
@@ -21,11 +23,13 @@ import {
   Download,
   Upload,
   Lock,
+  RotateCcw,
 } from 'lucide-react';
 
 export default function SettingsPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -383,6 +387,26 @@ export default function SettingsPage() {
       </div>
 
 
+      {/* Replay onboarding tour */}
+      <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-sm font-semibold text-text block">{t('settings.replayTour')}</span>
+            <span className="text-xs text-muted block">{t('settings.replayTourDesc')}</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 shrink-0"
+            onClick={() => {
+              try { localStorage.removeItem(ONBOARDING_DONE_KEY); } catch { /* noop */ }
+              navigate('/dashboard');
+            }}
+          >
+            <RotateCcw size={14} /> {t('settings.replayTour')}
+          </Button>
+        </div>
+      </div>
 
       {/* Backup and Restore Panel */}
       <div className="rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-sm p-6 space-y-6">
