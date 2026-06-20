@@ -1,14 +1,12 @@
-import { NavLink } from 'react-router-dom';
-import { Radar, Binary, QrCode, ArrowRight } from 'lucide-react';
-import { Button } from '../components/ui/button';
+import { Radar, Binary, QrCode } from 'lucide-react';
 import { useTranslation } from '../lib/i18n/I18nContext';
 import { LandingHero } from '../components/dashboard/LandingHero';
-import { ScanronMark } from '../components/brand/ScanronMark';
 import { FeatureSection } from '../components/landing/FeatureSection';
 import { DecodeDemo } from '../components/landing/DecodeDemo';
 import { LocalDemo } from '../components/landing/LocalDemo';
 import { VaultDemo } from '../components/landing/VaultDemo';
 import { DiscordDemo } from '../components/landing/DiscordDemo';
+import { SummonCTA } from '../components/landing/SummonCTA';
 
 function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -100,26 +98,8 @@ export default function LandingPage() {
         </section>
       </div>
 
-      {/* Closing CTA — dark band echoing the hero */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen -mb-8 overflow-hidden bg-[#070c14] text-white">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.05)_1px,transparent_1px)] bg-[size:32px_32px]" />
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full opacity-[0.10] animate-[radar-sweep_16s_linear_infinite] pointer-events-none"
-          style={{ background: 'conic-gradient(from 0deg, var(--color-primary) 0deg, transparent 50deg 360deg)' }}
-        />
-        <div className="relative mx-auto max-w-3xl px-4 py-20 flex flex-col items-center text-center gap-6">
-          <ScanronMark size={48} animated />
-          <h2 className="text-3xl sm:text-4xl font-display font-black uppercase tracking-tight leading-tight">
-            {t('landing.ctaTitle')}
-          </h2>
-          <p className="text-sm text-white/60 leading-relaxed max-w-md">{t('landing.ctaDesc')}</p>
-          <NavLink to="/dashboard" className="pt-1">
-            <Button size="lg" className="px-10 py-6 rounded-xl shadow-[0_0_22px_rgba(255,122,0,0.4)]">
-              {t('landing.launch')} <ArrowRight size={15} />
-            </Button>
-          </NavLink>
-        </div>
-      </section>
+      {/* Closing CTA — Dragon Radar locking the seven balls */}
+      <SummonCTA />
     </div>
   );
 }
