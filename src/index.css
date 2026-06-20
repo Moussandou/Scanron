@@ -88,6 +88,37 @@
   50% { transform: translate(0, -7px); }
 }
 
+/* Storm sky (hero): drifting clouds, forked lightning and a swaying energy
+   serpent. Long, slow loops — the storm broods, it does not strobe. */
+@keyframes cloud-drift {
+  from { transform: translate3d(0, 0, 0) scale(1.05); }
+  to { transform: translate3d(5%, -3%, 0) scale(1.18); }
+}
+@keyframes cloud-drift-rev {
+  from { transform: translate3d(0, 0, 0) scale(1.12); }
+  to { transform: translate3d(-6%, 2%, 0) scale(1.04); }
+}
+@keyframes serpent-sway {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-2.2%) translateY(-1%); }
+}
+/* Forked lightning bolt: dark most of the cycle, two quick strikes. */
+@keyframes bolt {
+  0%, 90%, 100% { opacity: 0; }
+  91% { opacity: 0.95; }
+  92% { opacity: 0.15; }
+  93.5% { opacity: 0.8; }
+  95% { opacity: 0; }
+}
+/* Ambient lightning wash over the whole sky. */
+@keyframes sky-flash {
+  0%, 88%, 100% { opacity: 0; }
+  89% { opacity: 0.45; }
+  90.5% { opacity: 0.1; }
+  92% { opacity: 0.3; }
+  94% { opacity: 0; }
+}
+
 /* Scroll-revealed sections: hidden until they enter the viewport. The
    IntersectionObserver in useReveal toggles `.is-visible`. */
 .reveal {

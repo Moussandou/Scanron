@@ -4,6 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { CapsuleCorpLogo } from '../brand/CapsuleCorpLogo';
 import { DragonBallIcon } from '../brand/DragonBallIcon';
+import { ShenronDragon } from '../brand/ShenronDragon';
+import { StormSky } from '../landing/StormSky';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 import { qrDataUrl } from '../../lib/qr/image';
 import { searchCode } from '../../lib/qr/shenron';
@@ -78,28 +80,18 @@ export function LandingHero() {
     <section
       onPointerMove={onMove}
       onPointerLeave={onLeave}
-      className="relative left-1/2 right-1/2 -mx-[50vw] -mt-8 flex w-screen items-center overflow-hidden bg-[#060a12] py-20 text-white lg:min-h-[90vh] lg:py-0"
+      className="relative left-1/2 right-1/2 -mx-[50vw] -mt-8 flex w-screen items-center overflow-hidden bg-[#03080b] py-20 text-white lg:min-h-[90vh] lg:py-0"
     >
-      {/* Coordinate grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.06)_1px,transparent_1px)] bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_at_60%_50%,black,transparent_85%)]" />
+      {/* The summoning storm */}
+      <StormSky />
 
-      {/* Giant off-axis radar scope */}
-      <div className="pointer-events-none absolute -right-40 top-1/2 h-[820px] w-[820px] max-w-none -translate-y-1/2 opacity-70">
-        <div className="absolute inset-0 rounded-full border border-accent/12" />
-        <div className="absolute inset-[12%] rounded-full border border-accent/12" />
-        <div className="absolute inset-[26%] rounded-full border border-accent/15" />
-        <div className="absolute inset-[42%] rounded-full border border-accent/15" />
-        <div className="absolute left-1/2 top-0 h-full w-px bg-accent/10" />
-        <div className="absolute left-0 top-1/2 h-px w-full bg-accent/10" />
-        <div
-          className="absolute inset-0 animate-[radar-sweep_7s_linear_infinite] rounded-full"
-          style={{ background: 'conic-gradient(from 0deg, rgba(255,122,0,0.16) 0deg, transparent 60deg 360deg)' }}
-        />
+      {/* Shenron looming in the storm, behind the console */}
+      <div className="pointer-events-none absolute -right-10 bottom-0 hidden opacity-[0.16] [filter:drop-shadow(0_0_40px_rgba(16,185,129,0.5))] lg:block">
+        <ShenronDragon className="h-[780px] w-[460px]" />
       </div>
 
-      {/* Ambient energy auras */}
-      <div className="pointer-events-none absolute -top-32 right-0 h-[680px] w-[680px] rounded-full bg-[radial-gradient(circle,rgba(255,122,0,0.16)_0%,transparent_62%)]" />
-      <div className="pointer-events-none absolute bottom-[-10%] left-[-5%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.12)_0%,transparent_65%)]" />
+      {/* Warm orange aura so the energy reads against the green storm */}
+      <div className="pointer-events-none absolute -top-32 right-10 h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle,rgba(255,122,0,0.14)_0%,transparent_62%)]" />
 
       {/* Floating Dragon Balls + ki orbs */}
       {ORBS.map((o, i) => (
@@ -118,9 +110,6 @@ export function LandingHero() {
           )}
         </span>
       ))}
-
-      {/* Vertical scan line crossing the whole hero */}
-      <span className="pointer-events-none absolute left-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-accent/40 to-transparent shadow-[0_0_12px_var(--color-accent)] animate-[packet_9s_linear_infinite]" />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 lg:grid-cols-12">
         {/* Pitch */}
