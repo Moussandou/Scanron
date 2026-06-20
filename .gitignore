@@ -30,3 +30,6 @@ docs/superpowers/
 
 # Local design working artifacts (screenshots, capture scripts)
 .design/
+
+# Firebase deploy cache
+.firebase/
