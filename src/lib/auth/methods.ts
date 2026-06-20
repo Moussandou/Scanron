@@ -7,8 +7,17 @@ import { getFirebaseAuth, getDb } from '../firebase/app';
 import { userPath } from '../db/paths';
 
 export async function signInWithGoogle(): Promise<string> {
-  const cred = await signInWithPopup(getFirebaseAuth(), new GoogleAuthProvider());
-  return cred.user.uid;
+  console.log('[Auth] Starting Google sign-in popup');
+  try {
+    const auth = getFirebaseAuth();
+    const provider = new GoogleAuthProvider();
+    const cred = await signInWithPopup(auth, provider);
+    console.log('[Auth] Google sign-in successful, UID:', cred.user.uid);
+    return cred.user.uid;
+  } catch (err) {
+    console.error('[Auth] Google sign-in popup error:', err);
+    throw err;
+  }
 }
 
 export async function signInWithEmail(email: string, password: string): Promise<string> {

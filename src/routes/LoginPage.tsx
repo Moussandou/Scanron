@@ -302,9 +302,12 @@ export default function LoginPage() {
 
   async function google() {
     setError(null);
+    console.log('[LoginPage] Triggering Google authentication flow');
     try {
       await signInWithGoogle();
+      console.log('[LoginPage] Google authentication completed successfully');
     } catch (err) {
+      console.error('[LoginPage] Google authentication encountered an error:', err);
       setError(err instanceof Error ? err.message : 'Google sign-in failed');
     }
   }
