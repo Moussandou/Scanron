@@ -4,7 +4,6 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { CapsuleCorpLogo } from '../brand/CapsuleCorpLogo';
 import { DragonBallIcon } from '../brand/DragonBallIcon';
-import { ShenronDragon } from '../brand/ShenronDragon';
 import { StormSky } from '../landing/StormSky';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 import { qrDataUrl } from '../../lib/qr/image';
@@ -84,11 +83,6 @@ export function LandingHero() {
     >
       {/* The summoning storm */}
       <StormSky />
-
-      {/* Shenron looming in the storm, behind the console */}
-      <div className="pointer-events-none absolute -right-10 bottom-0 hidden opacity-[0.16] [filter:drop-shadow(0_0_40px_rgba(16,185,129,0.5))] lg:block">
-        <ShenronDragon className="h-[780px] w-[460px]" />
-      </div>
 
       {/* Warm orange aura so the energy reads against the green storm */}
       <div className="pointer-events-none absolute -top-32 right-10 h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle,rgba(255,122,0,0.14)_0%,transparent_62%)]" />
