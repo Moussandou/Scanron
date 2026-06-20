@@ -90,7 +90,7 @@ export function LandingHero() {
         src="/shenron-ascii.svg"
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute -right-[8%] top-1/2 w-[min(880px,80vw)] max-w-none -translate-y-1/2 animate-[floaty_9s_ease-in-out_infinite] opacity-[0.55] [filter:drop-shadow(0_0_30px_rgba(16,185,129,0.5))] [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_85%)]"
+        className="pointer-events-none absolute left-1/2 top-1/2 w-[min(880px,80vw)] max-w-none -translate-x-[62%] -translate-y-1/2 animate-[floaty_9s_ease-in-out_infinite] opacity-[0.55] [filter:drop-shadow(0_0_30px_rgba(16,185,129,0.5))] [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_85%)]"
       />
 
       {/* Drifting ki orbs */}
