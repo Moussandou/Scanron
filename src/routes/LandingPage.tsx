@@ -7,14 +7,16 @@ import { LocalDemo } from '../components/landing/LocalDemo';
 import { VaultDemo } from '../components/landing/VaultDemo';
 import { DiscordDemo } from '../components/landing/DiscordDemo';
 import { SummonCTA } from '../components/landing/SummonCTA';
+import { Reveal } from '../components/landing/Reveal';
+import { ShenronSpine } from '../components/landing/ShenronSpine';
 
-function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
+function SectionHeading({ title }: { title: string }) {
   return (
-    <div className="space-y-2">
-      <span className="inline-block font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-        {eyebrow}
-      </span>
-      <h2 className="text-2xl sm:text-3xl font-display font-black uppercase tracking-wide text-text">{title}</h2>
+    <div className="flex items-center gap-3">
+      <span className="h-5 w-1.5 rounded-full bg-gradient-to-b from-primary to-accent" />
+      <h2 className="font-display text-2xl font-black uppercase tracking-wide text-text sm:text-3xl">
+        {title}
+      </h2>
     </div>
   );
 }
@@ -32,73 +34,93 @@ export default function LandingPage() {
     <div className="animate-in fade-in duration-300">
       <LandingHero />
 
-      <div className="space-y-24 py-16">
-        {/* How it works — a connected signal path */}
-        <section className="space-y-12">
-          <SectionHeading eyebrow={t('landing.howEyebrow')} title={t('landing.howTitle')} />
+      {/* The dragon's energy threads through the whole page and resolves into
+          Shenron at the summon below. */}
+      <div className="relative">
+        <ShenronSpine />
 
-          <div className="relative grid gap-10 md:grid-cols-3">
-            {/* Connecting signal line (desktop) */}
-            <div className="hidden md:block absolute top-7 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-primary/40 via-accent/50 to-primary/40" />
-            {steps.map((step, i) => (
-              <div key={i} className="relative flex flex-col items-center text-center gap-3">
-                <div className="relative z-10 w-14 h-14 rounded-2xl bg-surface border-2 border-primary/30 flex items-center justify-center text-primary shadow-[var(--shadow-card)]">
-                  {step.icon}
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-primary-fg text-[11px] font-display font-black flex items-center justify-center shadow-[0_2px_8px_rgba(255,122,0,0.4)]">
-                    {i + 1}
-                  </span>
-                </div>
-                <h3 className="font-display font-bold uppercase text-sm tracking-wider text-text">{step.title}</h3>
-                <p className="text-[13px] text-muted leading-relaxed max-w-[28ch]">{step.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="relative space-y-28 py-16">
+          {/* How it works — a connected signal path */}
+          <section className="space-y-12">
+            <Reveal>
+              <SectionHeading title={t('landing.howTitle')} />
+            </Reveal>
 
-        {/* Features — live mini-demos, one section each */}
-        <section className="space-y-12">
-          <SectionHeading eyebrow={t('landing.featEyebrow')} title={t('landing.features.title')} />
+            <div className="relative grid gap-10 md:grid-cols-3">
+              {/* Connecting signal line (desktop) */}
+              <div className="absolute left-[16.66%] right-[16.66%] top-7 hidden h-px bg-gradient-to-r from-primary/40 via-accent/50 to-primary/40 md:block" />
+              {steps.map((step, i) => (
+                <Reveal key={i} delay={i * 110}>
+                  <div className="relative flex flex-col items-center gap-3 text-center">
+                    <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-primary/30 bg-surface text-primary shadow-[var(--shadow-card)] transition-transform duration-300 hover:scale-105">
+                      {step.icon}
+                      <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary font-display text-[11px] font-black text-primary-fg shadow-[0_2px_8px_rgba(255,122,0,0.4)]">
+                        {i + 1}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-sm font-bold uppercase tracking-wider text-text">{step.title}</h3>
+                    <p className="max-w-[28ch] text-[13px] leading-relaxed text-muted">{step.text}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </section>
 
-          <div className="space-y-20 lg:space-y-28">
-            <FeatureSection
-              index="01"
-              eyebrow={t('landing.feat1.tag')}
-              title={t('landing.feat1.title')}
-              desc={t('landing.feat1.desc')}
-              points={[t('landing.feat1.p1'), t('landing.feat1.p2'), t('landing.feat1.p3')]}
-              media={<DecodeDemo />}
-            />
-            <FeatureSection
-              index="02"
-              reversed
-              eyebrow={t('landing.feat2.tag')}
-              title={t('landing.feat2.title')}
-              desc={t('landing.feat2.desc')}
-              points={[t('landing.feat2.p1'), t('landing.feat2.p2'), t('landing.feat2.p3')]}
-              media={<LocalDemo />}
-            />
-            <FeatureSection
-              index="03"
-              eyebrow={t('landing.feat3.tag')}
-              title={t('landing.feat3.title')}
-              desc={t('landing.feat3.desc')}
-              points={[t('landing.feat3.p1'), t('landing.feat3.p2'), t('landing.feat3.p3')]}
-              media={<VaultDemo />}
-            />
-            <FeatureSection
-              index="04"
-              reversed
-              eyebrow={t('landing.feat4.tag')}
-              title={t('landing.feat4.title')}
-              desc={t('landing.feat4.desc')}
-              points={[t('landing.feat4.p1'), t('landing.feat4.p2'), t('landing.feat4.p3')]}
-              media={<DiscordDemo />}
-            />
-          </div>
-        </section>
+          {/* Features — live mini-demos, one section each */}
+          <section className="space-y-14">
+            <Reveal>
+              <SectionHeading title={t('landing.features.title')} />
+            </Reveal>
+
+            <div className="space-y-24 lg:space-y-32">
+              <Reveal>
+                <FeatureSection
+                  index="01"
+                  eyebrow={t('landing.feat1.tag')}
+                  title={t('landing.feat1.title')}
+                  desc={t('landing.feat1.desc')}
+                  points={[t('landing.feat1.p1'), t('landing.feat1.p2'), t('landing.feat1.p3')]}
+                  media={<DecodeDemo />}
+                />
+              </Reveal>
+              <Reveal>
+                <FeatureSection
+                  index="02"
+                  reversed
+                  eyebrow={t('landing.feat2.tag')}
+                  title={t('landing.feat2.title')}
+                  desc={t('landing.feat2.desc')}
+                  points={[t('landing.feat2.p1'), t('landing.feat2.p2'), t('landing.feat2.p3')]}
+                  media={<LocalDemo />}
+                />
+              </Reveal>
+              <Reveal>
+                <FeatureSection
+                  index="03"
+                  eyebrow={t('landing.feat3.tag')}
+                  title={t('landing.feat3.title')}
+                  desc={t('landing.feat3.desc')}
+                  points={[t('landing.feat3.p1'), t('landing.feat3.p2'), t('landing.feat3.p3')]}
+                  media={<VaultDemo />}
+                />
+              </Reveal>
+              <Reveal>
+                <FeatureSection
+                  index="04"
+                  reversed
+                  eyebrow={t('landing.feat4.tag')}
+                  title={t('landing.feat4.title')}
+                  desc={t('landing.feat4.desc')}
+                  points={[t('landing.feat4.p1'), t('landing.feat4.p2'), t('landing.feat4.p3')]}
+                  media={<DiscordDemo />}
+                />
+              </Reveal>
+            </div>
+          </section>
+        </div>
       </div>
 
-      {/* Closing CTA — Dragon Radar locking the seven balls */}
+      {/* Closing CTA — the storm breaks and Shenron is summoned */}
       <SummonCTA />
     </div>
   );
