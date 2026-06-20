@@ -1,7 +1,16 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { ONBOARDING_DONE_KEY } from '../lib/onboarding/useOnboarding';
+
+const lsStore: Record<string, string> = {};
+vi.stubGlobal('localStorage', {
+  getItem: (k: string) => lsStore[k] ?? null,
+  setItem: (k: string, v: string) => { lsStore[k] = String(v); },
+  removeItem: (k: string) => { delete lsStore[k]; },
+  clear: () => { for (const k of Object.keys(lsStore)) delete lsStore[k]; },
+});
 
 vi.mock('../lib/auth/useAuth', () => ({ useAuth: () => ({ user: { uid: 'u1' }, loading: false }) }));
 vi.mock('../lib/db/hooks', () => ({
@@ -32,6 +41,8 @@ function renderPage(initialPath = '/dashboard') {
 }
 
 afterEach(cleanup);
+// Suppress the first-run tour so these tests cover base tab behavior.
+beforeEach(() => localStorage.setItem(ONBOARDING_DONE_KEY, '1'));
 
 describe('DashboardPage', () => {
   it('renders both tabs', () => {

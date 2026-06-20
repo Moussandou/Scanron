@@ -40,7 +40,7 @@ export function FriendsManager({ uid, accountId, friends, onChanged }: Props) {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end bg-surface/30 border border-border/60 p-5 rounded-2xl">
+      <div data-tour="add-code" className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end bg-surface/30 border border-border/60 p-5 rounded-2xl">
         <div className="space-y-1.5">
           <Label htmlFor="fname" className="text-xs uppercase tracking-wider font-display font-semibold">{t('friends.name')}</Label>
           <Input id="fname" placeholder="Vegeta" value={name} onChange={(e) => setName(e.target.value)} />

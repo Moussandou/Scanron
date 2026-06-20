@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../lib/auth/useAuth';
 import { useAccounts, useFriends } from '../lib/db/hooks';
@@ -9,6 +9,8 @@ import { ManageView } from '../components/vault/ManageView';
 import { TimeSyncChip } from '../components/dashboard/TimeSyncChip';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Tabs } from '../components/ui/Tabs';
+import { OnboardingTour } from '../components/onboarding/OnboardingTour';
+import { useOnboarding } from '../lib/onboarding/useOnboarding';
 import { downloadFriendsZip } from '../lib/qr/zip';
 import { useTranslation } from '../lib/i18n/I18nContext';
 import type { FriendDoc } from '../lib/db/types';
@@ -32,6 +34,18 @@ export default function DashboardPage() {
   const tab = searchParams.get('tab') === 'manage' ? 'manage' : 'scan';
   const setTab = (id: string) =>
     setSearchParams(id === 'scan' ? {} : { tab: id }, { replace: true });
+
+  // First-run guided tour. Each step lives on a different tab, so the page drives the
+  // tab as the tour advances; the tour itself just spotlights the anchored element.
+  const tourSteps = [
+    { anchor: 'add-code', title: t('onboarding.step1.title'), body: t('onboarding.step1.body'), tab: 'manage' },
+    { anchor: 'scan', title: t('onboarding.step2.title'), body: t('onboarding.step2.body'), tab: 'scan' },
+  ];
+  const tour = useOnboarding(tourSteps.length);
+  useEffect(() => {
+    if (tour.active) setTab(tourSteps[tour.step].tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tour.active, tour.step]);
 
   async function handleDownloadAll() {
     if (friends.length === 0) return;
@@ -90,6 +104,15 @@ export default function DashboardPage() {
 
       {expanded && (
         <QRModal name={expanded.name} friendCode={expanded.friendCode} onClose={() => setExpanded(null)} />
+      )}
+
+      {tour.active && (
+        <OnboardingTour
+          steps={tourSteps.map(({ anchor, title, body }) => ({ anchor, title, body }))}
+          step={tour.step}
+          onNext={tour.next}
+          onSkip={tour.skip}
+        />
       )}
     </div>
   );

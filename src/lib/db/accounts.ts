@@ -5,6 +5,14 @@ import { getDb } from '../firebase/app';
 import { accountsPath, accountPath } from './paths';
 import type { AccountDoc } from './types';
 
+/**
+ * Sentinel name for the auto-created local profile. Kept as a stable string (not
+ * localized at write time, since this module has no i18n) so the switcher can map it
+ * to a translated label at render time. Once the user renames the profile its name no
+ * longer matches this sentinel and their custom name is shown verbatim.
+ */
+export const LOCAL_DEFAULT_NAME = 'Default Account';
+
 function getLocalAccounts(): (AccountDoc & { id: string })[] {
   try {
     const raw = localStorage.getItem('scanron_local_accounts');
@@ -41,7 +49,7 @@ export async function listAccounts(uid: string | null): Promise<(AccountDoc & { 
     const accounts = getLocalAccounts();
     if (accounts.length === 0) {
       const defaultId = 'local_default';
-      const defaultAcc = { id: defaultId, name: 'Default Account', order: 0, createdAt: Date.now() };
+      const defaultAcc = { id: defaultId, name: LOCAL_DEFAULT_NAME, order: 0, createdAt: Date.now() };
       saveLocalAccounts([defaultAcc]);
       return [defaultAcc];
     }

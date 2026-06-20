@@ -20,7 +20,7 @@ export function ScanView({ friends, onExpand, onDownloadAll, zipping, onGoManage
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-6">
+    <div data-tour="scan" className="space-y-6">
       {friends.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border/80 bg-surface/20 p-12 text-center space-y-4 max-w-xl mx-auto">
           <div className="w-12 h-12 rounded-full bg-border/40 flex items-center justify-center mx-auto text-primary">

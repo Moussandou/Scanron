@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Plus, Pencil, Trash2, Check } from 'lucide-react';
-import { createAccount, renameAccount, deleteAccount } from '../../lib/db/accounts';
+import { createAccount, renameAccount, deleteAccount, LOCAL_DEFAULT_NAME } from '../../lib/db/accounts';
 import { cn } from '../../lib/utils';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 import type { AccountDoc } from '../../lib/db/types';
@@ -19,6 +19,15 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onChanged 
   const [name, setName] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
+
+  // The game-account concept is a power feature: with a single (implicit) profile we
+  // hide the chips and management controls entirely and only offer a discreet way to
+  // add a second one. The full switcher reappears once there are 2+ profiles.
+  const multi = accounts.length >= 2;
+
+  // The auto-created local profile carries a stable sentinel name; show it localized.
+  const displayName = (a: AccountDoc & { id: string }) =>
+    a.name === LOCAL_DEFAULT_NAME ? t('switcher.defaultName') : a.name;
 
   async function create() {
     if (!name.trim()) return;
@@ -46,7 +55,7 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onChanged 
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {accounts.map((a) => {
+      {multi && accounts.map((a) => {
         const isActive = a.id === currentId;
 
         if (editingId === a.id) {
@@ -92,7 +101,7 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onChanged 
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary shadow-[0_0_6px_var(--color-primary)]" />
                 </span>
               )}
-              {a.name}
+              {displayName(a)}
             </button>
             {isActive && (
               <span className="flex items-center pr-2 gap-0.5">
@@ -133,12 +142,19 @@ export function AccountSwitcher({ uid, accounts, currentId, onSelect, onChanged 
             {t('switcher.add')}
           </button>
         </span>
-      ) : (
+      ) : multi ? (
         <button
           onClick={() => setCreating(true)}
           className="flex items-center gap-1.5 rounded-lg border border-dashed border-border px-4 py-2 text-xs font-semibold font-display tracking-wider uppercase text-muted hover:text-text hover:border-muted/40 hover:bg-surface-2/20 cursor-pointer transition-all duration-200"
         >
           <Plus size={12} /> {t('switcher.newAccount')}
+        </button>
+      ) : (
+        <button
+          onClick={() => setCreating(true)}
+          className="text-xs font-display font-semibold uppercase tracking-wider text-muted/70 hover:text-primary cursor-pointer transition-colors duration-200"
+        >
+          {t('switcher.addProfile')}
         </button>
       )}
     </div>

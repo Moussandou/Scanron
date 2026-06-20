@@ -8,6 +8,7 @@ vi.mock('../../lib/db/accounts', () => ({
   createAccount: vi.fn(),
   renameAccount: vi.fn(),
   deleteAccount: vi.fn().mockResolvedValue(undefined),
+  LOCAL_DEFAULT_NAME: 'Default Account',
 }));
 import { deleteAccount } from '../../lib/db/accounts';
 
@@ -19,6 +20,27 @@ const accounts = [
 afterEach(cleanup);
 
 describe('AccountSwitcher', () => {
+  it('with a single profile shows only the add-profile link and no management controls', () => {
+    render(
+      <I18nProvider>
+        <AccountSwitcher uid="u1" accounts={[accounts[0]]} currentId="a1" onSelect={vi.fn()} onChanged={vi.fn()} />
+      </I18nProvider>,
+    );
+    expect(screen.getByRole('button', { name: /add profile/i })).toBeDefined();
+    expect(screen.queryByRole('button', { name: /delete account/i })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Main' })).toBeNull();
+  });
+
+  it('with multiple profiles shows chips and management controls', () => {
+    render(
+      <I18nProvider>
+        <AccountSwitcher uid="u1" accounts={accounts} currentId="a1" onSelect={vi.fn()} onChanged={vi.fn()} />
+      </I18nProvider>,
+    );
+    expect(screen.getByRole('button', { name: 'Alt' })).toBeDefined();
+    expect(screen.getByRole('button', { name: /delete account/i })).toBeDefined();
+  });
+
   it('calls onSelect when a chip is clicked', () => {
     const onSelect = vi.fn();
     render(
