@@ -1,15 +1,14 @@
 import { NavLink } from 'react-router-dom';
-import { Radar, Binary, QrCode, ShieldCheck, Layers, MessageSquare, ArrowRight } from 'lucide-react';
+import { Radar, Binary, QrCode, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useTranslation } from '../lib/i18n/I18nContext';
 import { LandingHero } from '../components/dashboard/LandingHero';
 import { ScanronMark } from '../components/brand/ScanronMark';
-import {
-  SeedDecodingVisual,
-  ZeroCredentialsVisual,
-  MultiAccountVisual,
-  DiscordWebhookVisual,
-} from '../components/dashboard/FeatureVisuals';
+import { FeatureSection } from '../components/landing/FeatureSection';
+import { DecodeDemo } from '../components/landing/DecodeDemo';
+import { LocalDemo } from '../components/landing/LocalDemo';
+import { VaultDemo } from '../components/landing/VaultDemo';
+import { DiscordDemo } from '../components/landing/DiscordDemo';
 
 function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -29,13 +28,6 @@ export default function LandingPage() {
     { icon: <Radar size={20} />, title: t('landing.step1'), text: t('landing.how1') },
     { icon: <Binary size={20} />, title: t('landing.step2'), text: t('landing.how2') },
     { icon: <QrCode size={20} />, title: t('landing.step3'), text: t('landing.how3') },
-  ];
-
-  const features = [
-    { icon: <Binary size={16} />, title: t('landing.feat1.title'), desc: t('landing.feat1.desc'), visual: <SeedDecodingVisual /> },
-    { icon: <ShieldCheck size={16} />, title: t('landing.feat2.title'), desc: t('landing.feat2.desc'), visual: <ZeroCredentialsVisual /> },
-    { icon: <Layers size={16} />, title: t('landing.feat3.title'), desc: t('landing.feat3.desc'), visual: <MultiAccountVisual /> },
-    { icon: <MessageSquare size={16} />, title: t('landing.feat4.title'), desc: t('landing.feat4.desc'), visual: <DiscordWebhookVisual /> },
   ];
 
   return (
@@ -65,28 +57,45 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features */}
-        <section className="space-y-10">
+        {/* Features — live mini-demos, one section each */}
+        <section className="space-y-12">
           <SectionHeading eyebrow={t('landing.featEyebrow')} title={t('landing.features.title')} />
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            {features.map((feat, i) => (
-              <div
-                key={i}
-                className="group rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)] overflow-hidden transition-all duration-300 hover:border-primary/30 hover:-translate-y-0.5 hover:shadow-[var(--shadow-pop)]"
-              >
-                <div className="flex items-start gap-3 p-5 pb-4">
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
-                    {feat.icon}
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-display font-bold uppercase tracking-wide text-text">{feat.title}</h3>
-                    <p className="text-[11px] text-muted leading-relaxed">{feat.desc}</p>
-                  </div>
-                </div>
-                <div className="px-5 pb-5">{feat.visual}</div>
-              </div>
-            ))}
+          <div className="space-y-20 lg:space-y-28">
+            <FeatureSection
+              index="01"
+              eyebrow={t('landing.feat1.tag')}
+              title={t('landing.feat1.title')}
+              desc={t('landing.feat1.desc')}
+              points={[t('landing.feat1.p1'), t('landing.feat1.p2'), t('landing.feat1.p3')]}
+              media={<DecodeDemo />}
+            />
+            <FeatureSection
+              index="02"
+              reversed
+              eyebrow={t('landing.feat2.tag')}
+              title={t('landing.feat2.title')}
+              desc={t('landing.feat2.desc')}
+              points={[t('landing.feat2.p1'), t('landing.feat2.p2'), t('landing.feat2.p3')]}
+              media={<LocalDemo />}
+            />
+            <FeatureSection
+              index="03"
+              eyebrow={t('landing.feat3.tag')}
+              title={t('landing.feat3.title')}
+              desc={t('landing.feat3.desc')}
+              points={[t('landing.feat3.p1'), t('landing.feat3.p2'), t('landing.feat3.p3')]}
+              media={<VaultDemo />}
+            />
+            <FeatureSection
+              index="04"
+              reversed
+              eyebrow={t('landing.feat4.tag')}
+              title={t('landing.feat4.title')}
+              desc={t('landing.feat4.desc')}
+              points={[t('landing.feat4.p1'), t('landing.feat4.p2'), t('landing.feat4.p3')]}
+              media={<DiscordDemo />}
+            />
           </div>
         </section>
       </div>
