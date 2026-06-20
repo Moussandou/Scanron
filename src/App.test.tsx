@@ -24,7 +24,7 @@ describe('App', () => {
       </MemoryRouter>,
     );
     expect(screen.getAllByText('Scanron').length).toBeGreaterThan(0);
-    expect(screen.getByText('Launch Radar')).toBeDefined();
+    expect(screen.getAllByText('Launch Radar').length).toBeGreaterThan(0);
   });
 
   it('renders the Codes page at the /dashboard route', () => {
