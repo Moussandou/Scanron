@@ -55,6 +55,85 @@
   50% { transform: translateY(-6px); }
 }
 
+/* ── Landing redesign: Capsule Corp / Shenron choreography ───────────────── */
+
+/* Slow energy aura behind the radar console. */
+@keyframes aura-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.08); opacity: 0.9; }
+}
+/* Ki orbs drifting upward like rising energy. */
+@keyframes ember-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  12% { opacity: var(--ember-opacity, 0.7); }
+  80% { opacity: var(--ember-opacity, 0.7); }
+  100% { transform: translateY(-120px) scale(0.4); opacity: 0; }
+}
+/* Storm sky flicker for the summon climax. */
+@keyframes storm-flicker {
+  0%, 92%, 100% { opacity: 0; }
+  93% { opacity: 0.9; }
+  94% { opacity: 0.1; }
+  95% { opacity: 0.7; }
+  96% { opacity: 0; }
+}
+/* Shenron erupting from the radar core. */
+@keyframes shenron-rise {
+  0% { transform: translateY(40px) scaleY(0.4); opacity: 0; }
+  100% { transform: translateY(0) scaleY(1); opacity: 1; }
+}
+/* Gentle orbital drift for the dragon-ball constellation. */
+@keyframes orbit-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(0, -7px); }
+}
+
+/* Scroll-revealed sections: hidden until they enter the viewport. The
+   IntersectionObserver in useReveal toggles `.is-visible`. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* The Shenron spine: a dragon that draws itself down the page as you scroll.
+   Default = fully drawn (no-JS / unsupported browsers see the whole dragon).
+   Where scroll-driven animations exist, it starts hidden and draws on scroll. */
+.dragon-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+@supports (animation-timeline: scroll()) {
+  .dragon-draw {
+    stroke-dashoffset: 1;
+    animation: dragon-draw linear forwards;
+    animation-timeline: scroll(root block);
+    animation-range: 4% 78%;
+  }
+  @keyframes dragon-draw {
+    to { stroke-dashoffset: 0; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  /* Keep the dragon fully visible rather than frozen mid-draw. */
+  .dragon-draw {
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 /* Respect users who prefer reduced motion — this UI leans on pulses, pings,
    spins and slide-ins, so calm them all rather than auditing each one. */
 @media (prefers-reduced-motion: reduce) {
