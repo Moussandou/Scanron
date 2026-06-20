@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 
 export interface TourStep {
@@ -29,32 +29,52 @@ export function OnboardingTour({ steps, step, onNext, onSkip }: Props) {
   const current = steps[step];
   const isLast = step === steps.length - 1;
 
+  // Lock body scroll while the tour is visible.
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, []);
+
+  // Track the anchor's rect. On step change the target may not be mounted yet
+  // (tab switch), so retry for up to ~500ms before giving up.
+  const frameRef = useRef(0);
   useLayoutEffect(() => {
     if (!current) return;
-    let frame = 0;
     let tries = 0;
+    const maxTries = 30;
 
     const measure = () => {
       const el = document.querySelector<HTMLElement>(`[data-tour="${current.anchor}"]`);
       if (el) {
         el.scrollIntoView({ block: 'center', behavior: 'smooth' });
         setRect(el.getBoundingClientRect());
-      } else if (tries < 10) {
-        // Target may not be mounted yet (e.g. a tab just switched) — retry briefly.
+      } else if (tries < maxTries) {
         tries += 1;
-        frame = requestAnimationFrame(measure);
+        frameRef.current = requestAnimationFrame(measure);
       } else {
         setRect(null);
       }
     };
 
     measure();
-    window.addEventListener('resize', measure);
-    window.addEventListener('scroll', measure, true);
+
+    // Re-measure after a short delay to account for CSS animations on newly
+    // mounted tab content.
+    const settle = setTimeout(() => {
+      const el = document.querySelector<HTMLElement>(`[data-tour="${current.anchor}"]`);
+      if (el) setRect(el.getBoundingClientRect());
+    }, 350);
+
+    const onLayout = () => {
+      const el = document.querySelector<HTMLElement>(`[data-tour="${current.anchor}"]`);
+      if (el) setRect(el.getBoundingClientRect());
+    };
+    window.addEventListener('resize', onLayout);
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('resize', measure);
-      window.removeEventListener('scroll', measure, true);
+      cancelAnimationFrame(frameRef.current);
+      clearTimeout(settle);
+      window.removeEventListener('resize', onLayout);
     };
   }, [current]);
 
@@ -75,23 +95,37 @@ export function OnboardingTour({ steps, step, onNext, onSkip }: Props) {
       }
     : undefined;
 
-  // Bubble: under the target when there's room, otherwise above; centered if no target.
+  // Bubble: prefer just below the target, else just above, else pinned within the
+  // viewport. Always clamped so the whole bubble (title included) stays on screen even
+  // when the target is taller than the viewport. BUBBLE_H is an over-estimate so the
+  // bottom never clips; HEADER keeps it clear of the fixed top bar.
   const bubbleStyle: React.CSSProperties = (() => {
     if (!rect) {
       return { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' };
     }
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    const BUBBLE_H = 260;
+    const MARGIN = 16;
+    const HEADER = 84;
+    const maxTop = Math.max(HEADER, vh - BUBBLE_H - MARGIN);
+
     const below = rect.bottom + 12;
-    const placeAbove = below + 200 > vh;
-    const left = Math.min(Math.max(rect.left, 16), Math.max(16, vw - 336));
-    return placeAbove
-      ? { position: 'fixed', bottom: vh - rect.top + 12, left }
-      : { position: 'fixed', top: below, left };
+    const above = rect.top - 12 - BUBBLE_H;
+    let top: number;
+    if (below + BUBBLE_H + MARGIN <= vh) top = below;
+    else if (above >= HEADER) top = above;
+    else top = maxTop;
+    top = Math.min(Math.max(top, HEADER), maxTop);
+
+    const left = Math.min(Math.max(rect.left, MARGIN), Math.max(MARGIN, vw - 336));
+    return { position: 'fixed', top, left };
   })();
 
   return (
     <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label={current.title}>
+      {/* Click-blocker over the whole viewport */}
+      <div className="absolute inset-0" onClick={(e) => e.stopPropagation()} />
       {rect ? (
         <div style={holeStyle} className="ring-2 ring-primary/60 transition-all duration-300" />
       ) : (
