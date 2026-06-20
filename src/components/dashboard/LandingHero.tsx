@@ -1,19 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Radar, Check } from 'lucide-react';
 import { Button } from '../ui/button';
-import { CapsuleCorpLogo } from '../brand/CapsuleCorpLogo';
 import { StormSky } from '../landing/StormSky';
 import { useTranslation } from '../../lib/i18n/I18nContext';
 import { qrDataUrl } from '../../lib/qr/image';
-import { searchCode } from '../../lib/qr/shenron';
 import { isValidFriendCode } from '../../lib/db/validation';
 
 const DEMO_CODE = 'dr85d9jy';
 
-// Radar graticule: 60 tick marks, every 5th major. Bearings and a few blips
-// give the scope a real instrument feel.
-const TICKS = Array.from({ length: 60 }, (_, i) => i * 6);
+// A few dragon balls picked up as blips on the radar (angle°, radius px).
 const BLIPS = [
   { a: 34, r: 96, tone: 'var(--color-primary)' },
   { a: 168, r: 58, tone: 'var(--color-accent)' },
@@ -157,136 +153,63 @@ export function LandingHero() {
               {/* Aura behind the console */}
               <div className="pointer-events-none absolute -inset-6 animate-[aura-pulse_5s_ease-in-out_infinite] rounded-[2rem] bg-[radial-gradient(circle_at_50%_40%,rgba(255,122,0,0.22),transparent_70%)]" />
 
-              <div className="relative rounded-[1.6rem] bg-[linear-gradient(140deg,rgba(255,122,0,0.55),rgba(14,165,233,0.18)_45%,rgba(16,185,129,0.5))] p-[1.5px] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.85)]">
-                <div className="relative overflow-hidden rounded-[1.55rem] bg-[#070d15]/92 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
-                  {/* Holographic scanlines + corner brackets */}
-                  <div className="pointer-events-none absolute inset-0 z-30 opacity-[0.05] [background:repeating-linear-gradient(0deg,#fff_0,#fff_1px,transparent_1px,transparent_3px)]" />
-                  <span className="pointer-events-none absolute left-2.5 top-2.5 z-30 h-4 w-4 rounded-tl border-l border-t border-white/25" />
-                  <span className="pointer-events-none absolute right-2.5 top-2.5 z-30 h-4 w-4 rounded-tr border-r border-t border-white/25" />
-                  <span className="pointer-events-none absolute bottom-2.5 left-2.5 z-30 h-4 w-4 rounded-bl border-b border-l border-white/25" />
-                  <span className="pointer-events-none absolute bottom-2.5 right-2.5 z-30 h-4 w-4 rounded-br border-b border-r border-white/25" />
+              <div className="relative rounded-3xl border border-white/10 bg-[#070d15]/90 p-4 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.8)] backdrop-blur-md">
+                {/* Friend code — the one real control: this is the whole product */}
+                <div className="mb-4 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 transition-colors focus-within:border-signal/50">
+                  <Radar size={16} className="shrink-0 text-signal" />
+                  <input
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.trim())}
+                    spellCheck={false}
+                    autoComplete="off"
+                    placeholder={t('landing.codePlaceholder')}
+                    className="flex-1 bg-transparent font-mono text-sm tracking-[0.18em] text-white placeholder:text-white/25 focus:outline-none"
+                  />
+                  {valid && (
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-signal/20 text-signal">
+                      <Check size={11} strokeWidth={3} />
+                    </span>
+                  )}
+                </div>
 
-                  {/* Brand bar */}
-                  <div className="relative flex items-center justify-between border-b border-white/10 bg-white/[0.02] px-4 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <CapsuleCorpLogo size={18} />
-                      <div className="leading-none">
-                        <div className="font-display text-[11px] font-black uppercase tracking-[0.18em] text-white">Dragon Radar</div>
-                        <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.25em] text-white/40">Capsule Corp · MK II</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-3.5 items-end gap-0.5">
-                        {[4, 7, 10, 13].map((h, i) => (
-                          <span key={i} className="w-0.5 rounded-sm bg-signal" style={{ height: h, opacity: 0.4 + i * 0.14 }} />
-                        ))}
-                      </div>
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+                {/* Dragon Radar screen — the friend code resolves into a scannable QR */}
+                <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-signal/15 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12),rgba(4,9,15,0.55)_72%)]">
+                  <div className="absolute h-[80%] w-[80%] rounded-full border border-signal/20" />
+                  <div className="absolute h-[54%] w-[54%] rounded-full border border-signal/15" />
+                  <div className="absolute h-[28%] w-[28%] rounded-full border border-signal/15" />
+                  <div className="absolute h-px w-[80%] bg-signal/10" />
+                  <div className="absolute h-[80%] w-px bg-signal/10" />
+                  {/* green radar sweep */}
+                  <div
+                    className="absolute h-[80%] w-[80%] animate-[radar-sweep_5s_linear_infinite] rounded-full"
+                    style={{ background: 'conic-gradient(from 0deg, rgba(16,185,129,0.40) 0deg, rgba(16,185,129,0.05) 46deg, transparent 82deg 360deg)', transformOrigin: 'center' }}
+                  />
+                  {/* dragon balls picked up as blips on the radar */}
+                  {!(valid && src) &&
+                    BLIPS.map((b, i) => (
+                      <span key={i} className="absolute left-1/2 top-1/2" style={{ transform: `rotate(${b.a}deg) translateY(-${b.r}px)` }}>
+                        <span className="block h-2 w-2 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-primary shadow-[0_0_10px_var(--color-primary)]" />
                       </span>
-                      <span className="font-mono text-[8px] font-bold uppercase tracking-widest text-signal">Online</span>
-                    </div>
-                  </div>
+                    ))}
 
-                  {/* Input */}
-                  <div className="relative px-4 pt-4">
-                    <div className="flex items-center gap-2 rounded-xl border border-white/12 bg-black/40 px-2 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition focus-within:border-accent/60 focus-within:shadow-[0_0_0_1px_rgba(14,165,233,0.35),inset_0_1px_0_rgba(255,255,255,0.05)]">
-                      <span className="rounded-md bg-accent/15 px-2 py-1.5 font-mono text-[8px] font-bold uppercase tracking-wider text-accent">Code</span>
-                      <input
-                        value={code}
-                        onChange={(e) => setCode(e.target.value.trim())}
-                        spellCheck={false}
-                        autoComplete="off"
-                        placeholder={t('landing.codePlaceholder')}
-                        className="flex-1 bg-transparent py-2 font-mono text-sm tracking-[0.18em] text-white placeholder:text-white/25 focus:outline-none"
-                      />
-                      <span className={`rounded-md px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-wider ${valid ? 'bg-signal/15 text-signal' : 'bg-white/5 text-white/40'}`}>
-                        {valid ? t('landing.locked') : code ? t('landing.invalid') : t('landing.awaiting')}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Scope */}
-                  <div className="relative flex h-[300px] items-center justify-center">
-                    {/* Graticule ticks */}
-                    <div className="absolute h-[250px] w-[250px]">
-                      {TICKS.map((a) => {
-                        const major = a % 30 === 0;
-                        return (
-                          <span key={a} className="absolute left-1/2 top-0 origin-[center_125px] -translate-x-1/2" style={{ transform: `rotate(${a}deg)` }}>
-                            <span className={`block w-px ${major ? 'h-3 bg-accent/55' : 'h-1.5 bg-accent/25'}`} />
-                          </span>
-                        );
-                      })}
-                    </div>
-                    {/* Rings + crosshair */}
-                    <div className="absolute h-[250px] w-[250px] rounded-full border border-accent/15" />
-                    <div className="absolute h-[172px] w-[172px] rounded-full border border-accent/12" />
-                    <div className="absolute h-[96px] w-[96px] rounded-full border border-accent/15" />
-                    <div className="absolute h-px w-[250px] bg-accent/10" />
-                    <div className="absolute h-[250px] w-px bg-accent/10" />
-                    {/* Bearings */}
-                    <div className="pointer-events-none absolute h-[250px] w-[250px] font-mono text-[7px] tracking-widest text-white/30">
-                      <span className="absolute left-1/2 top-0.5 -translate-x-1/2">N</span>
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2">S</span>
-                      <span className="absolute left-0.5 top-1/2 -translate-y-1/2">W</span>
-                      <span className="absolute right-0.5 top-1/2 -translate-y-1/2">E</span>
-                    </div>
-                    {/* Sweep */}
-                    <div
-                      className="absolute h-[250px] w-[250px] animate-[radar-sweep_6s_linear_infinite] rounded-full"
-                      style={{ background: 'conic-gradient(from 0deg, rgba(255,122,0,0.30) 0deg, rgba(255,122,0,0.05) 42deg, transparent 72deg 360deg)', transformOrigin: 'center' }}
-                    />
-                    {/* Blips — fade out once a target is locked */}
-                    {!(valid && src) &&
-                      BLIPS.map((b, i) => (
-                        <span key={i} className="absolute left-1/2 top-1/2" style={{ transform: `rotate(${b.a}deg) translateY(-${b.r}px)` }}>
-                          <span className="block h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full" style={{ background: b.tone, boxShadow: `0 0 8px ${b.tone}` }} />
-                        </span>
-                      ))}
-
-                    {/* Center result */}
-                    {valid && src ? (
-                      <div className="animate-in fade-in zoom-in-90 relative z-20 duration-300">
-                        <div className="relative h-[152px] w-[152px] rounded-2xl bg-white p-3 shadow-[0_0_44px_rgba(16,185,129,0.45)] ring-1 ring-white/40">
-                          <span className="absolute left-1.5 top-1.5 h-3.5 w-3.5 rounded-tl-sm border-l-2 border-t-2 border-primary" />
-                          <span className="absolute right-1.5 top-1.5 h-3.5 w-3.5 rounded-tr-sm border-r-2 border-t-2 border-primary" />
-                          <span className="absolute bottom-1.5 left-1.5 h-3.5 w-3.5 rounded-bl-sm border-b-2 border-l-2 border-primary" />
-                          <span className="absolute bottom-1.5 right-1.5 h-3.5 w-3.5 rounded-br-sm border-b-2 border-r-2 border-primary" />
-                          <img src={src} alt="Generated Shenron QR" className="h-full w-full object-contain" />
-                          <span className="absolute left-0 h-[2px] w-full animate-[scan_2.6s_linear_infinite] bg-accent/70 shadow-[0_0_8px_var(--color-accent)]" />
-                        </div>
-                        <span className="absolute -right-2 -top-2 flex h-3 w-3">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
-                          <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-[#070d15] bg-signal" />
-                        </span>
+                  {/* Locked target → the real, scannable QR */}
+                  {valid && src ? (
+                    <div className="animate-in fade-in zoom-in-90 relative z-20 duration-300">
+                      <div className="relative h-[150px] w-[150px] rounded-2xl bg-white p-3 shadow-[0_0_55px_rgba(16,185,129,0.5)] ring-1 ring-white/40">
+                        <span className="absolute left-1.5 top-1.5 h-3.5 w-3.5 rounded-tl-sm border-l-2 border-t-2 border-primary" />
+                        <span className="absolute right-1.5 top-1.5 h-3.5 w-3.5 rounded-tr-sm border-r-2 border-t-2 border-primary" />
+                        <span className="absolute bottom-1.5 left-1.5 h-3.5 w-3.5 rounded-bl-sm border-b-2 border-l-2 border-primary" />
+                        <span className="absolute bottom-1.5 right-1.5 h-3.5 w-3.5 rounded-br-sm border-b-2 border-r-2 border-primary" />
+                        <img src={src} alt="Generated Shenron QR" className="h-full w-full object-contain" />
+                        <span className="absolute left-0 h-[2px] w-full animate-[scan_2.6s_linear_infinite] bg-signal/70 shadow-[0_0_8px_var(--color-signal)]" />
                       </div>
-                    ) : (
-                      <div className="relative z-20 flex flex-col items-center gap-3 text-center">
-                        <div className="h-4 w-4 animate-ping rounded-full border-2 border-white/80 bg-accent shadow-[0_0_12px_var(--color-accent)]" />
-                        <span className="font-mono text-[9px] uppercase tracking-widest text-white/40">
-                          {t('landing.awaiting')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Telemetry strip */}
-                  <div className="grid grid-cols-[1.5fr_1fr_1fr] divide-x divide-white/10 border-t border-white/10 bg-white/[0.02]">
-                    <div className="px-3 py-2.5">
-                      <div className="font-mono text-[7px] uppercase tracking-widest text-white/35">Seed</div>
-                      <div className="mt-0.5 truncate font-mono text-[10px] text-accent">{valid ? searchCode(code) : '—'}</div>
                     </div>
-                    <div className="px-3 py-2.5">
-                      <div className="font-mono text-[7px] uppercase tracking-widest text-white/35">Range</div>
-                      <div className="mt-0.5 font-mono text-[10px] text-white/70">On-device</div>
-                    </div>
-                    <div className="px-3 py-2.5">
-                      <div className="font-mono text-[7px] uppercase tracking-widest text-white/35">Output</div>
-                      <div className={`mt-0.5 font-mono text-[10px] ${valid ? 'text-signal' : 'text-white/40'}`}>{valid ? 'Real QR' : 'Idle'}</div>
-                    </div>
-                  </div>
+                  ) : (
+                    <span className="relative z-20 flex h-5 w-5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal/60" />
+                      <span className="relative inline-flex h-5 w-5 rounded-full border-2 border-signal bg-signal/30" />
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
